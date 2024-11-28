@@ -132,15 +132,15 @@ const OffStageRegistration = () => {
   };
 
   return (
-    <div className="bg-lightAccent min-h-screen pt-12">
+    <div className="bg-lightAccent min-h-screen pt-12 pb-10">
       {/* Today's Offstage Events Section */}
       <div className="max-w-5xl mx-auto p-6">
         <h2 className="text-2xl font-bold text-darkAccent text-center mb-6">
           Today's Offstage Items
         </h2>
-        <div className="overflow-x-auto">
-        <table className="table-auto w-full bg-white shadow-lg rounded-lg mb-8">
-          <thead className="bg-primary text-white">
+        <div className="overflow-x-auto rounded-xl">
+        <table className="table-auto w-full bg-white shadow-lg rounded-xl mb-8">
+          <thead className="bg-primary text-white rounded-t-xl">
             <tr>
               <th className="px-4 py-2">Item Name</th>
               <th className="px-4 py-2">Date</th>
@@ -159,7 +159,7 @@ const OffStageRegistration = () => {
               getTodaysEvents().map((item, index) => {
                 const { date, time } = formatDateTime(item.date, item.time); // Destructure the formatted date and time
                 return (
-                  <tr key={index} className="border-t border-accent">
+                  <tr key={index} className="border-t-2 border-accent">
                     <td className="px-4 py-2 text-center">{item.event}</td>
                     <td className="px-4 py-2 text-center">{date}</td>{" "}
                     {/* Display formatted date */}

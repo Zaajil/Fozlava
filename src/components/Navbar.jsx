@@ -5,7 +5,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to handle menu visibility
 
   return (
-    <nav className="bg-darkAccent text-lightAccent fixed w-full top-0 shadow-lg h-16 z-50">
+    <nav className="bg-darkAccent fixed text-lightAccent pb-24 w-full top-0  shadow-lg h-16 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold  text-lightAccent">
