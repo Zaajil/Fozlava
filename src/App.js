@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import HomePage from "./components/HomePage";
+import EventResults from "./components/EventResults";
+import OffStageRegistration from "./components/OffStageRegistration";
+import Gallery from "./components/Gallery";
+import RegisteredList from './components/RegisteredList';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        {/* Navbar at the top */}
+        <Navbar />
+
+        {/* Main content */}
+        <main className="flex-grow pt-16">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/results" element={<EventResults />} />
+            <Route path="/register" element={<OffStageRegistration />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/registered-list" element={<RegisteredList />} />
+          </Routes>
+        </main>
+
+        {/* Footer at the bottom */}
+        
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
