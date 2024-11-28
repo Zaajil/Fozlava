@@ -132,12 +132,13 @@ const OffStageRegistration = () => {
   };
 
   return (
-    <div className="bg-lightAccent min-h-screen pt-16">
+    <div className="bg-lightAccent min-h-screen pt-12">
       {/* Today's Offstage Events Section */}
       <div className="max-w-5xl mx-auto p-6">
         <h2 className="text-2xl font-bold text-darkAccent text-center mb-6">
           Today's Offstage Items
         </h2>
+        <div className="overflow-x-auto">
         <table className="table-auto w-full bg-white shadow-lg rounded-lg mb-8">
           <thead className="bg-primary text-white">
             <tr>
@@ -172,11 +173,12 @@ const OffStageRegistration = () => {
           </tbody>
         </table>
       </div>
+      </div>
 
       {/* Registration Form */}
-      <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+      <div className="max-w-md mx-auto  p-6 bg-white shadow-lg rounded-lg mt-0">
         <h2 className="text-2xl font-bold text-darkAccent text-center mb-6">
-          Register for Offstage Events
+          Registration Form
         </h2>
 
         {/* Form fields */}

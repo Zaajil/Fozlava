@@ -70,7 +70,7 @@ const RegisteredList = () => {
   });
 
   return (
-    <div className="bg-lightAccent min-h-screen pt-16">
+    <div className="bg-lightAccent min-h-screen pt-12">
       <div className="max-w-5xl mx-auto p-6">
         <h2 className="text-2xl font-bold text-darkAccent text-center mb-6">
           View Registered Participants
@@ -108,7 +108,7 @@ const RegisteredList = () => {
         )}
 
         {/* Display participants for selected event */}
-        <div>
+        <div className="overflow-x-auto">
           {selectedEvent && filteredBySearch.length > 0 ? (
             <table className="table-auto w-full bg-white shadow-lg rounded-lg mt-4">
               <thead className="bg-primary text-white">
