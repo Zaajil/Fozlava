@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 const OffStageRegistration = () => {
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [event, setEvent] = useState("");
-  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
@@ -13,6 +12,9 @@ const OffStageRegistration = () => {
   const [group, setGroup] = useState("");
   const [registrations, setRegistrations] = useState([]); // State for storing registration data from Google Sheets
   const [todayEvents, setTodayEvents] = useState([]); // State for storing today's events fetched from Google Sheets
+  const [isLoading, setIsLoading] = useState(false); // Loading state for the registration process
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   // Function to fetch registration data from Google Sheets
   const fetchRegistrationData = async () => {
@@ -34,7 +36,6 @@ const OffStageRegistration = () => {
         "https://script.google.com/macros/s/AKfycbwD_PNBJYI4dne1pLa2xFWAIHspp6rD-9Ja9zf7rMu5XxXrCAt6_84uZsikRr-21CjO/exec"
       );
       const data = await response.json();
-      console.log("Fetched Today Events:", data); // Debugging log
       setTodayEvents(data); // Update state with today's event data
     } catch (error) {
       console.error("Error fetching today's events:", error);
@@ -84,49 +85,69 @@ const OffStageRegistration = () => {
   };
 
   const handleRegister = async () => {
-    if (name && event && department && year && rollNo && phone && group) {
-      const googleScriptURL =
-        "https://script.google.com/macros/s/AKfycbwwew-PTvf-AQ9pKlOouudAcvusDNUs1BTBJdUx8Ih79ct34eoXX7awDMPIapoub00/exec";
+    // Check for missing fields and mark them
+    const errors = {};
 
-      const formData = new FormData();
-      formData.append("event", event);
-      formData.append("name", name);
-      formData.append("department", department);
-      formData.append("year", year);
-      formData.append("rollNo", rollNo);
-      formData.append("phone", phone);
-      formData.append("group", group);
+    // Check for missing fields
+    if (!name) errors.name = "Name is required.";
+    if (!event) errors.event = "Event is required.";
+    if (!department) errors.department = "Department is required.";
+    if (!year) errors.year = "Year is required.";
+    if (!rollNo) errors.rollNo = "Roll number is required.";
+    if (!phone) errors.phone = "Phone number is required.";
+    if (!group) errors.group = "Group is required.";
 
-      try {
-        const response = await fetch(googleScriptURL, {
-          method: "POST",
-          body: formData,
-        });
-        const data = await response.json();
-        if (data.status === "success") {
-          setRegistrationNumber(data.regNum);
-          alert("Registration successful!");
-          fetchRegistrationData(); // Refresh registration list after successful submission
-        } else {
-          alert("Error submitting form.");
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        alert("Error submitting form. Please try again.");
-      }
-
-      // Clear the form
-      setEvent("");
-      setName("");
-      setDepartment("");
-      setYear("");
-      setRollNo("");
-      setPhone("");
-      setGroup("");
-    } else {
-      alert("Please fill in all fields.");
+  
+    // Ensure each field is properly checked for missing values
+    if (phone && !/^\d{10}$/.test(phone)) {
+      errors.phone = "Phone number must be exactly 10 digits.";
     }
+
+    setErrors(errors); // Update the errors state
+
+    // If there are errors, don't proceed with form submission
+    if (Object.keys(errors).length > 0) return;
+
+    setIsLoading(true); // Start the loading process
+
+    const googleScriptURL =
+      "https://script.google.com/macros/s/AKfycbwwew-PTvf-AQ9pKlOouudAcvusDNUs1BTBJdUx8Ih79ct34eoXX7awDMPIapoub00/exec";
+
+    const formData = new FormData();
+    formData.append("event", event);
+    formData.append("name", name);
+    formData.append("department", department);
+    formData.append("year", year);
+    formData.append("rollNo", rollNo);
+    formData.append("phone", phone);
+    formData.append("group", group);
+
+    try {
+      const response = await fetch(googleScriptURL, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+        setRegistrationNumber(data.regNum);
+        fetchRegistrationData(); // Refresh registration list after successful submission
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+
+    setIsLoading(false); // Stop the loading process
+
+    // Clear the form
+    setEvent("");
+    setName("");
+    setDepartment("");
+    setYear("");
+    setRollNo("");
+    setPhone("");
+    setGroup("");
   };
+
   const handleViewRegistrations = () => {
     navigate("/registered-list", { state: { event, registrations } }); // Pass the current event and registrations to the next page
   };
@@ -139,40 +160,40 @@ const OffStageRegistration = () => {
           Today's Offstage Items
         </h2>
         <div className="overflow-x-auto rounded-xl">
-        <table className="table-auto w-full bg-white shadow-lg rounded-xl mb-8">
-          <thead className="bg-primary text-white rounded-t-xl">
-            <tr>
-              <th className="px-4 py-2">Item Name</th>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Time</th>
-              <th className="px-4 py-2">Venue</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getTodaysEvents().length === 0 ? (
+          <table className="table-auto w-full bg-white shadow-lg rounded-xl mb-8">
+            <thead className="bg-primary text-white rounded-t-xl">
               <tr>
-                <td colSpan="4" className="text-center py-4">
-                  No events today.
-                </td>
+                <th className="px-4 py-2">Item Name</th>
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Time</th>
+                <th className="px-4 py-2">Venue</th>
               </tr>
-            ) : (
-              getTodaysEvents().map((item, index) => {
-                const { date, time } = formatDateTime(item.date, item.time); // Destructure the formatted date and time
-                return (
-                  <tr key={index} className="border-t-2 border-accent">
-                    <td className="px-4 py-2 text-center">{item.event}</td>
-                    <td className="px-4 py-2 text-center">{date}</td>{" "}
-                    {/* Display formatted date */}
-                    <td className="px-4 py-2 text-center">{time}</td>{" "}
-                    {/* Display formatted time */}
-                    <td className="px-4 py-2 text-center">{item.venue}</td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {getTodaysEvents().length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="text-center py-4">
+                    No events today.
+                  </td>
+                </tr>
+              ) : (
+                getTodaysEvents().map((item, index) => {
+                  const { date, time } = formatDateTime(item.date, item.time); // Destructure the formatted date and time
+                  return (
+                    <tr key={index} className="border-t-2 border-accent">
+                      <td className="px-4 py-2 text-center">{item.event}</td>
+                      <td className="px-4 py-2 text-center">{date}</td>{" "}
+                      {/* Display formatted date */}
+                      <td className="px-4 py-2 text-center">{time}</td>{" "}
+                      {/* Display formatted time */}
+                      <td className="px-4 py-2 text-center">{item.venue}</td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Registration Form */}
@@ -183,10 +204,9 @@ const OffStageRegistration = () => {
 
         {/* Form fields */}
         <div className="mb-4">
-          <label className="block mb-2 font-medium text-darkAccent">
-            Event
-          </label>
+          <label className="block mb-2 font-medium text-darkAccent">Event</label>
           <select
+            id="event"
             value={event}
             onChange={(e) => setEvent(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
@@ -198,22 +218,25 @@ const OffStageRegistration = () => {
               </option>
             ))}
           </select>
+          {errors.event && <p className="text-red-500 text-sm">{errors.event}</p>}
         </div>
 
         <div className="mb-4">
           <label className="block mb-2 font-medium text-darkAccent">Name</label>
           <input
+            id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
-          />
+            placeholder="Enter your full name"
+            />
+            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
         <div className="mb-4">
-          <label className="block mb-2 font-medium text-darkAccent">
-            Department
-          </label>
+          <label className="block mb-2 font-medium text-darkAccent">Department</label>
           <select
+            id="department"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
@@ -223,10 +246,12 @@ const OffStageRegistration = () => {
             <option value="ECE">ECE</option>
             <option value="EEE">EEE</option>
           </select>
+          {errors.department && <p className="text-red-500 text-sm">{errors.department}</p>}
         </div>
         <div className="mb-4">
           <label className="block mb-2 font-medium text-darkAccent">Year</label>
           <select
+            id="year"
             value={year}
             onChange={(e) => setYear(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
@@ -235,34 +260,38 @@ const OffStageRegistration = () => {
             <option value="1st Year">UG 1st Year</option>
             <option value="2nd Year">UG 2nd Year</option>
           </select>
+          {errors.year && <p className="text-red-500 text-sm">{errors.year}</p>}
         </div>
+
+        
         <div className="mb-4">
-          <label className="block mb-2 font-medium text-darkAccent">
-            Roll No
-          </label>
+          <label className="block mb-2 font-medium text-darkAccent">Roll No</label>
           <input
+            id="rollNo"
             type="text"
             value={rollNo}
             onChange={(e) => setRollNo(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
+            placeholder="Enter your roll number"
           />
+          {errors.rollNo && <p className="text-red-500 text-sm">{errors.rollNo}</p>}
         </div>
         <div className="mb-4">
-          <label className="block mb-2 font-medium text-darkAccent">
-            Phone Number
-          </label>
+          <label className="block mb-2 font-medium text-darkAccent">Phone Number</label>
           <input
+            id="phone"
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
+            placeholder="Enter your phone number"
           />
+          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
         </div>
         <div className="mb-4">
-          <label className="block mb-2 font-medium text-darkAccent">
-            Group
-          </label>
+          <label className="block mb-2 font-medium text-darkAccent">Group</label>
           <select
+            id="group"
             value={group}
             onChange={(e) => setGroup(e.target.value)}
             className="w-full border border-accent px-4 py-2 rounded-lg"
@@ -271,13 +300,20 @@ const OffStageRegistration = () => {
             <option value="Boys Hostel">Boys Hostel</option>
             <option value="Day Scholars">Day Scholars</option>
           </select>
+          {errors.group && <p className="text-red-500 text-sm">{errors.group}</p>}
         </div>
 
         <button
           onClick={handleRegister}
           className="bg-primary text-white px-6 py-3 w-full rounded-lg shadow hover:bg-secondary"
         >
-          Register
+          {isLoading ? (
+            <div className="flex justify-center items-center w-full h-full">
+            <div className="spinner-border animate-spin text-center border-4 rounded-full w-6 h-6 border-t-transparent"></div>
+          </div> // Show spinner while loading
+          ) : (
+            "Register"
+          )}
         </button>
 
         {registrationNumber && (
@@ -295,7 +331,7 @@ const OffStageRegistration = () => {
           View Registered Participants
         </button>
       </div>
-    </div>
+      </div>
   );
 };
 

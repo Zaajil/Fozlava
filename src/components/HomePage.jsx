@@ -16,17 +16,20 @@ const HomePage = () => {
         );
         const data = await response.json();
         console.log("Fetched data: ", data);
-
+  
         if (data && data.totalPoints) {
           const totalPointsData = data.totalPoints;
-
+  
           // Format the data to ensure correct values are displayed
           const formattedTable = totalPointsData.map((row) => ({
-            team: row.team || "Unknown Team",  // Handle missing team name
-            totalPoints: row.totalPoints || 0,  // Handle missing total points
+            team: row.team || "Unknown Team", // Handle missing team name
+            totalPoints: row.totalPoints || 0, // Handle missing total points
           }));
-
-          setPointsTable(formattedTable);
+  
+          // Sort the table in descending order of total points
+          const sortedTable = formattedTable.sort((a, b) => b.totalPoints - a.totalPoints);
+  
+          setPointsTable(sortedTable);
         } else {
           console.error("No total points data available");
         }
@@ -36,12 +39,13 @@ const HomePage = () => {
         setLoading(false);
       }
     };
-
+  
     fetchPointsTable();
   }, []);
+  
 
   return (
-    <div className="bg-white min-h-screen pt-16">
+    <div className="bg-white min-h-screen pt-12">
       <div className="max-w-5xl mx-auto p-6">
         <h1 className="text-4xl font-bold text-darkAccent text-center mb-8">
           Fozlava Points Table
@@ -51,8 +55,9 @@ const HomePage = () => {
         ) : pointsTable.length === 0 ? (
           <div className="text-center text-red-500">No data available</div>
         ) : (
+          <div className="overflow-x-auto rounded-xl">
           <table className="table-auto w-full text-center bg-accent shadow-lg rounded-xl">
-            <thead className="bg-primary rounded-xl text-white">
+            <thead className="bg-primary rounded-t-xl text-white">
               <tr>
                 <th className="px-4 py-2">Team</th>
                 <th className="px-4 py-2">Total Points</th>
@@ -66,7 +71,7 @@ const HomePage = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         )}
         <div className="text-center mt-8">
           <button
