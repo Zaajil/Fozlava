@@ -52,6 +52,8 @@ const EventResults = () => {
       }
     };
 
+    
+
     fetchResults();
   }, []);
 
