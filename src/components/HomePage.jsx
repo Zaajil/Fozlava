@@ -7,42 +7,38 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPointsTable = async () => {
-      try {
-        console.log("Fetching total points...");
-        // URL for the total points Google Sheets data (use your actual URL here)
-        const response = await fetch(
-          "https://script.google.com/macros/s/AKfycbxEPWn3eU43Buy71NxDOOQvhzYiH4KTLopcsTLXrwpReaSjK5H4uOC-60IL4D1gBw/exec"
-        );
-        const data = await response.json();
-        console.log("Fetched data: ", data);
-  
-        if (data && data.totalPoints) {
-          const totalPointsData = data.totalPoints;
-  
-          // Format the data to ensure correct values are displayed
-          const formattedTable = totalPointsData.map((row) => ({
-            team: row.team || "Unknown Team", // Handle missing team name
-            totalPoints: row.totalPoints || 0, // Handle missing total points
-          }));
-  
-          // Sort the table in descending order of total points
-          const sortedTable = formattedTable.sort((a, b) => b.totalPoints - a.totalPoints);
-  
-          setPointsTable(sortedTable);
-        } else {
-          console.error("No total points data available");
-        }
-      } catch (error) {
-        console.error("Error fetching total points:", error);
-      } finally {
-        setLoading(false);
+  const fetchAndUpdateTable = async () => {
+    try {
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbxEPWn3eU43Buy71NxDOOQvhzYiH4KTLopcsTLXrwpReaSjK5H4uOC-60IL4D1gBw/exec"
+      );
+      const data = await response.json();
+      if (data && data.totalPoints) {
+        const formattedTable = data.totalPoints.map((row) => ({
+          team: row.team || "Unknown Team",
+          totalPoints: row.totalPoints || 0,
+        })).sort((a, b) => b.totalPoints - a.totalPoints);
+
+        setPointsTable(formattedTable);
+        localStorage.setItem("pointsTable", JSON.stringify(formattedTable));
       }
-    };
-  
-    fetchPointsTable();
-  }, []);
-  
+    } catch (error) {
+      console.error("Error fetching total points:", error);
+    }
+  };
+
+  const cachedData = localStorage.getItem("pointsTable");
+  if (cachedData) {
+    setPointsTable(JSON.parse(cachedData));
+    setLoading(false);
+  } else {
+    fetchAndUpdateTable();
+  }
+
+  const intervalId = setInterval(fetchAndUpdateTable, 30000);
+  return () => clearInterval(intervalId);
+}, []);
+
 
   return (
     <div className="bg-white min-h-screen pt-12">
