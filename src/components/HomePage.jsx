@@ -12,7 +12,7 @@ const HomePage = () => {
         console.log("Fetching total points...");
         // URL for the total points Google Sheets data (use your actual URL here)
         const response = await fetch(
-          "https://script.google.com/macros/s/AKfycbxEPWn3eU43Buy71NxDOOQvhzYiH4KTLopcsTLXrwpReaSjK5H4uOC-60IL4D1gBw/exec"
+          "https://script.google.com/macros/s/AKfycbxu0ehjZKgAxTq4REiMrfdZlE5eZ5IhyURpggvW0AJEA8ikdzqOaRrbeg3_2Ag5jIXJGg/exec"
         );
         const data = await response.json();
         console.log("Fetched data: ", data);

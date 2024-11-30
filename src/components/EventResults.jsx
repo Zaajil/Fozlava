@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 const EventResults = () => {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([]); // Current results
+  const [cachedResults, setCachedResults] = useState([]); // Cached results
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
         console.log("Fetching results...");
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzQBL_VMonLkrvp1wlaNzHBaNgAVbr5bcbrmn1iKe6ELm-R6hKFLoxOZPFGSn757-g/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxu0ehjZKgAxTq4REiMrfdZlE5eZ5IhyURpggvW0AJEA8ikdzqOaRrbeg3_2Ag5jIXJGg/exec");
         const data = await response.json();
 
         // Combine individual and group results into one array
@@ -44,15 +45,16 @@ const EventResults = () => {
         }, {});
 
         // Convert grouped object into an array to render
-        setResults(Object.values(groupedResults));
+        const finalResults = Object.values(groupedResults);
+
+        setCachedResults(finalResults); // Update cached results
+        setResults(finalResults); // Update current results
       } catch (error) {
         console.error("Error fetching results:", error);
       } finally {
         setLoading(false);
       }
     };
-
-    
 
     fetchResults();
   }, []);
@@ -107,17 +109,19 @@ const EventResults = () => {
     );
   };
 
+  const resultsToDisplay = loading ? cachedResults : results;
+
   return (
     <div className="bg-lightAccent min-h-screen pt-16">
       <div className="max-w-5xl mx-auto p-6">
         <h2 className="text-3xl font-bold text-darkAccent text-center mb-6">
           Event Results
         </h2>
-        {loading ? (
+        {loading && resultsToDisplay.length === 0 ? (
           <div className="text-center text-primary">Loading results...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {results.map((result, index) => {
+            {resultsToDisplay.map((result, index) => {
               // Check if there is at least one valid result (for any prize)
               const hasValidResults =
                 (result.first && result.first.length > 0) ||

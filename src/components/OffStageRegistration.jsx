@@ -9,7 +9,6 @@ const OffStageRegistration = () => {
   const [year, setYear] = useState("");
   const [rollNo, setRollNo] = useState("");
   const [phone, setPhone] = useState("");
-  const [group, setGroup] = useState("");
   const [registrations, setRegistrations] = useState([]); // State for storing registration data from Google Sheets
   const [todayEvents, setTodayEvents] = useState([]); // State for storing today's events fetched from Google Sheets
   const [isLoading, setIsLoading] = useState(false); // Loading state for the registration process
@@ -20,7 +19,7 @@ const OffStageRegistration = () => {
   const fetchRegistrationData = async () => {
     try {
       const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbwwew-PTvf-AQ9pKlOouudAcvusDNUs1BTBJdUx8Ih79ct34eoXX7awDMPIapoub00/exec"
+        "https://script.google.com/macros/s/AKfycbzxzB61OITDNFIdKpk_eYKUbz59p-504uIukXZT7qOw2yuD55YldAmTfmmdGpVM6HM/exec"
       );
       const data = await response.json();
       setRegistrations(data); // Update state with fetched data
@@ -33,7 +32,7 @@ const OffStageRegistration = () => {
   const fetchTodayEvents = async () => {
     try {
       const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbwD_PNBJYI4dne1pLa2xFWAIHspp6rD-9Ja9zf7rMu5XxXrCAt6_84uZsikRr-21CjO/exec"
+        "https://script.google.com/macros/s/AKfycbzE0jNvKGLm0Sn3EEqhZdpioRIXGnK2fyb9zRPJ3nqWIHKBdOpEvYD9qNoT_mfbB6D6yA/exec"
       );
       const data = await response.json();
       setTodayEvents(data); // Update state with today's event data
@@ -95,7 +94,6 @@ const OffStageRegistration = () => {
     if (!year) errors.year = "Year is required.";
     if (!rollNo) errors.rollNo = "Roll number is required.";
     if (!phone) errors.phone = "Phone number is required.";
-    if (!group) errors.group = "Group is required.";
 
   
     // Ensure each field is properly checked for missing values
@@ -111,7 +109,7 @@ const OffStageRegistration = () => {
     setIsLoading(true); // Start the loading process
 
     const googleScriptURL =
-      "https://script.google.com/macros/s/AKfycbwwew-PTvf-AQ9pKlOouudAcvusDNUs1BTBJdUx8Ih79ct34eoXX7awDMPIapoub00/exec";
+      "https://script.google.com/macros/s/AKfycbzxzB61OITDNFIdKpk_eYKUbz59p-504uIukXZT7qOw2yuD55YldAmTfmmdGpVM6HM/exec";
 
     const formData = new FormData();
     formData.append("event", event);
@@ -120,7 +118,6 @@ const OffStageRegistration = () => {
     formData.append("year", year);
     formData.append("rollNo", rollNo);
     formData.append("phone", phone);
-    formData.append("group", group);
 
     try {
       const response = await fetch(googleScriptURL, {
@@ -145,7 +142,6 @@ const OffStageRegistration = () => {
     setYear("");
     setRollNo("");
     setPhone("");
-    setGroup("");
   };
 
   const handleViewRegistrations = () => {
@@ -236,16 +232,40 @@ const OffStageRegistration = () => {
         <div className="mb-4">
           <label className="block mb-2 font-medium text-darkAccent">Department</label>
           <select
-            id="department"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-            className="w-full border border-accent px-4 py-2 rounded-lg"
-          >
-            <option value="">-- Select Department --</option>
-            <option value="CSE">CSE</option>
-            <option value="ECE">ECE</option>
-            <option value="EEE">EEE</option>
-          </select>
+  id="department"
+  value={department}
+  onChange={(e) => setDepartment(e.target.value)}
+  className="w-full border border-accent px-4 py-2 rounded-lg"
+>
+  <option value="">-- Select Department --</option>
+  <option value="Arabic">Arabic</option>
+  <option value="B.Voc Auto">B.Voc Auto</option>
+  <option value="B.Voc IT">B.Voc IT</option>
+  <option value="BCom CA">BCom CA</option>
+  <option value="BMMC">BMMC</option>
+  <option value="Botany">Botany</option>
+  <option value="Chemistry">Chemistry</option>
+  <option value="Commerce">Commerce</option>
+  <option value="Computer Science">Computer Science</option>
+  <option value="Economics">Economics</option>
+  <option value="English (Aided)">English (Aided)</option>
+  <option value="English (SF)">English (SF)</option>
+  <option value="Functional English">Functional English</option>
+  <option value="Geology">Geology</option>
+  <option value="History">History</option>
+  <option value="Library Science">Library Science</option>
+  <option value="Malayalam">Malayalam</option>
+  <option value="Management Studies">Management Studies</option>
+  <option value="Maths">Maths</option>
+  <option value="MCJ">MCJ</option>
+  <option value="Physics">Physics</option>
+  <option value="Psychology (Aided)">Psychology (Aided)</option>
+  <option value="Psychology (SF)">Psychology (SF)</option>
+  <option value="Sociology">Sociology</option>
+  <option value="Statistics">Statistics</option>
+  <option value="Zoology">Zoology</option>
+</select>
+
           {errors.department && <p className="text-red-500 text-sm">{errors.department}</p>}
         </div>
         <div className="mb-4">
@@ -257,8 +277,11 @@ const OffStageRegistration = () => {
             className="w-full border border-accent px-4 py-2 rounded-lg"
           >
             <option value="">-- Select Year --</option>
-            <option value="1st Year">UG 1st Year</option>
-            <option value="2nd Year">UG 2nd Year</option>
+            <option value="UG 1st Year">UG 1st Year</option>
+            <option value="UG 2nd Year">UG 2nd Year</option>
+            <option value="UG 3rd Year">UG 3rd Year</option>
+            <option value="PG 1st Year">PG 1st Year</option>
+            <option value="PG 2nd Year">PG 2nd Year</option>
           </select>
           {errors.year && <p className="text-red-500 text-sm">{errors.year}</p>}
         </div>
@@ -287,20 +310,6 @@ const OffStageRegistration = () => {
             placeholder="Enter your phone number"
           />
           {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2 font-medium text-darkAccent">Group</label>
-          <select
-            id="group"
-            value={group}
-            onChange={(e) => setGroup(e.target.value)}
-            className="w-full border border-accent px-4 py-2 rounded-lg"
-          >
-            <option value="">-- Select Group --</option>
-            <option value="Boys Hostel">Boys Hostel</option>
-            <option value="Day Scholars">Day Scholars</option>
-          </select>
-          {errors.group && <p className="text-red-500 text-sm">{errors.group}</p>}
         </div>
 
         <button

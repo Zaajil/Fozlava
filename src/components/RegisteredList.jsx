@@ -12,7 +12,7 @@ const RegisteredList = () => {
     const fetchEvents = async () => {
       try {
         const response = await fetch(
-          'https://script.google.com/macros/s/AKfycbwD_PNBJYI4dne1pLa2xFWAIHspp6rD-9Ja9zf7rMu5XxXrCAt6_84uZsikRr-21CjO/exec'
+          'https://script.google.com/macros/s/AKfycbzE0jNvKGLm0Sn3EEqhZdpioRIXGnK2fyb9zRPJ3nqWIHKBdOpEvYD9qNoT_mfbB6D6yA/exec'
         );
         const data = await response.json();
         setEvents(data); // Store the fetched events data
@@ -28,7 +28,7 @@ const RegisteredList = () => {
   const fetchRegistrations = async (event) => {
     try {
       const response = await fetch(
-        `https://script.google.com/macros/s/AKfycbxpY1HcEEd4uAH4BvBqt4Gp_TFQv7w7VUkt1H_aOmS8bhI9b16pHkA6PR_A3zc7uzs/exec?event=${event}`
+        `https://script.google.com/macros/s/AKfycbzxzB61OITDNFIdKpk_eYKUbz59p-504uIukXZT7qOw2yuD55YldAmTfmmdGpVM6HM/exec?event=${event}`
       );
       const data = await response.json();
       setRegistrations(data); // Store the fetched participant data
@@ -65,7 +65,8 @@ const RegisteredList = () => {
     return (
       reg.name.toLowerCase().includes(searchTerm) ||
       reg.department.toLowerCase().includes(searchTerm) ||
-      reg.regNum.toLowerCase().includes(searchTerm)
+      reg.regNum.toLowerCase().includes(searchTerm) ||
+      reg.group.toLowerCase().includes(searchTerm)
     );
   });
 
@@ -117,6 +118,7 @@ const RegisteredList = () => {
                   <th className="px-4 py-2">Name</th>
                   <th className="px-4 py-2">Department</th>
                   <th className="px-4 py-2">Roll Number</th>
+                  <th className="px-4 py-2">Group</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,6 +128,7 @@ const RegisteredList = () => {
                     <td className="px-4 py-2 text-center">{reg.name}</td>
                     <td className="px-4 py-2 text-center">{reg.department}</td>
                     <td className="px-4 py-2 text-center">{reg.rollNo}</td>
+                    <td className="px-4 py-2 text-center">{reg.group}</td>
                   </tr>
                 ))}
               </tbody>
