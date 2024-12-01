@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // React Router for navigation
 import { motion } from "framer-motion"; // Framer Motion for animations
-import { Loader2, Trophy, ArrowRight } from "lucide-react"; // Icons
+import { Loader2, ArrowRight } from "lucide-react"; // Icons
 import "../index.css"; // Custom CSS for additional Tailwind styles
 
 const HomePage = () => {
   const navigate = useNavigate(); // Use React Router's navigate
   const [pointsTable, setPointsTable] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Departments for each team
+  const departments = {
+    teamA: [
+      "Maths", "Statistics", "Management Studies", "Geology", "History", "English (Aided)", "Library Science"
+    ],
+    teamB: [
+      "Physics", "Chemistry", "Computer Science", "B.Voc IT", "Malayalam", "Functional English", "English (SF)"
+    ],
+    teamC: [
+      "Psychology (SF)", "Psychology (Aided)", "Commerce", "Zoology", "Botany", "Sociology"
+    ],
+    teamD: [
+      "BCom CA", "Arabic", "Economics", "BMMC", "B.Voc Auto", "MCJ"
+    ]
+  };
 
   useEffect(() => {
     const fetchPointsTable = async () => {
@@ -63,9 +79,9 @@ const HomePage = () => {
               <table className="table-auto w-full text-left border-collapse border border-gray-300">
                 <thead className="bg-gray-200">
                   <tr>
-                    <th className="px-4 py-2 border border-gray-300">Rank</th>
-                    <th className="px-4 py-2 border border-gray-300">Team</th>
-                    <th className="px-4 py-2 border border-gray-300 text-right">
+                    <th className="px-4 py-2 border border-gray-300 text-center">Rank</th>
+                    <th className="px-4 py-2 border border-gray-300 text-center">Team</th>
+                    <th className="px-4 py-2 border border-gray-300 text-center">
                       Total Points
                     </th>
                   </tr>
@@ -73,12 +89,12 @@ const HomePage = () => {
                 <tbody>
                   {pointsTable.map((team, index) => (
                     <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-4 py-2 border border-gray-300">
-                        {index === 0 && <Trophy className="inline-block mr-2 text-yellow-500" />}
+                      <td className="px-4 py-2 border border-gray-300 text-center">
+                        {index === 0}
                         {index + 1}
                       </td>
-                      <td className="px-4 py-2 border border-gray-300">{team.team}</td>
-                      <td className="px-4 py-2 border border-gray-300 text-right">
+                      <td className="px-4 py-2 border border-gray-300 text-center">{team.team}</td>
+                      <td className="px-4 py-2 border border-gray-300 text-center">
                         {team.totalPoints}
                       </td>
                     </tr>
@@ -88,12 +104,23 @@ const HomePage = () => {
             </div>
           )}
         </div>
+
+        {/* Display team departments */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center mt-8"
         >
+          <div className="pb-6">
+            <button
+              onClick={() => navigate("/register")}
+              className="bg-primary text-white text-lg px-6 py-3 rounded-lg flex items-center justify-center mx-auto"
+            >
+              Registration
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </button>
+          </div>
           <button
             onClick={() => navigate("/results")}
             className="bg-primary text-white text-lg px-6 py-3 rounded-lg flex items-center justify-center mx-auto"
@@ -101,6 +128,25 @@ const HomePage = () => {
             View Individual Results
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
+
+          {/* Departments List */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-secondary mb-4">Departments in Each Team</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+              {Object.keys(departments).map((teamKey, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg shadow-md">
+                  <h3 className="text-lg font-medium text-primary mb-2">
+                    {teamKey.charAt(0).toUpperCase() + teamKey.slice(1).replace('team', 'Team ')}
+                  </h3>
+                  <ul className="list-disc pl-6">
+                    {departments[teamKey].map((dept, idx) => (
+                      <li key={idx} className="text-sm text-gray-700">{dept}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

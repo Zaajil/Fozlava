@@ -6,6 +6,7 @@ import EventResults from "./components/EventResults";
 import OffStageRegistration from "./components/OffStageRegistration";
 import Gallery from "./components/Gallery";
 import RegisteredList from './components/RegisteredList';
+import Admin from "./components/admin";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/register" element={<OffStageRegistration />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/registered-list" element={<RegisteredList />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
 
