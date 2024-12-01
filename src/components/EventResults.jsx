@@ -108,10 +108,10 @@ const EventResults = () => {
     return (
       <div className={`p-4 rounded-lg ${
         prizeLabel === "1st"
-          ? "bg-amber-200"
+          ? "bg-darkAccent/20"
           : prizeLabel === "2nd"
-          ? "bg-lightAccent"
-          : "bg-purple-200"
+          ? "bg-paleAccent"
+          : "bg-accent"
       }`}>
         <h4 className="font-bold text-lg mb-2 text-darkAccent">{prizeLabel} Prize</h4>
         {(Array.isArray(prize) ? prize : [prize]).map((winner, idx) => (

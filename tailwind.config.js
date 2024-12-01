@@ -4,15 +4,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#1A1A2E",  // Dark Blue
-        secondary: "#16213E", // Darker Blue for contrast
-        accent: "#FFFFFF",    // White
-        lightAccent: "#E0E0E0", // Light Gray
-        darkAccent: "#0F0F2E", // Very Dark Blue for emphasis
-        paleAccent: "#D1D1D1", // Pale Gray
+        primary: "#008080",  // Teal
+        secondary: "#FF6F61", // Coral
+        accent: "#D3D3D3",    // Light Gray
+        lightAccent: "#F0F0F0", // Very Light Gray
+        darkAccent: "#005757", // Dark Teal
+        paleAccent: "#FFD8D2",  // Pale Coral
       },
       backgroundImage: {
-        'gradient-to-r': 'linear-gradient(to right, #FFFFFF, #1A1A2E)', // White to Dark Blue gradient
+        'gradient-to-r': 'linear-gradient(to right, #008080, #FF6F61)', // Teal to Coral gradient
       }
     },
   },

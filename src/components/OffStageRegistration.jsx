@@ -330,7 +330,7 @@ const OffStageRegistration = () => {
 
               <button
                 onClick={handleViewRegistrations}
-                className="w-full mt-4 bg-darkAccent/50 text-white px-4 py-2 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-300"
+                className="w-full mt-4 bg-darkAccent/50 text-white px-4 py-2 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-300"
               >
                 View Registered Participants
               </button>
