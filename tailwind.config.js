@@ -4,13 +4,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#e57ca0",  // Main pink
-        secondary: "#856494", // Violet
-        accent: "#e3c069",   // Gold
-        lightAccent: "#fae4ab", // Light cream
-        darkAccent: "#40105e", // Dark purple
-        paleAccent: "#fae4a",  // Pale cream
+        primary: "#1A1A2E",  // Dark Blue
+        secondary: "#16213E", // Darker Blue for contrast
+        accent: "#FFFFFF",    // White
+        lightAccent: "#E0E0E0", // Light Gray
+        darkAccent: "#0F0F2E", // Very Dark Blue for emphasis
+        paleAccent: "#D1D1D1", // Pale Gray
       },
+      backgroundImage: {
+        'gradient-to-r': 'linear-gradient(to right, #FFFFFF, #1A1A2E)', // White to Dark Blue gradient
+      }
     },
   },
   plugins: [],

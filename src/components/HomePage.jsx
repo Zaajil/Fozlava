@@ -40,7 +40,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/10 to-secondary/10 pt-12">
+    <div className="min-h-screen bg-gradient-to-b from-primary/50 to-secondary/20 pt-12">
       <div className="max-w-5xl mx-auto p-6">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
@@ -51,7 +51,7 @@ const HomePage = () => {
           Fozlava Point Table
         </motion.h1>
         <div className="bg-white shadow-md rounded-lg mt-8 p-6">
-          <h2 className="text-2xl font-bold text-center mb-4">Team Rankings</h2>
+          
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -61,7 +61,7 @@ const HomePage = () => {
           ) : (
             <div className="overflow-x-auto">
               <table className="table-auto w-full text-left border-collapse border border-gray-300">
-                <thead className="bg-gray-100">
+                <thead className="bg-gray-200">
                   <tr>
                     <th className="px-4 py-2 border border-gray-300">Rank</th>
                     <th className="px-4 py-2 border border-gray-300">Team</th>

@@ -152,7 +152,7 @@ const EventResults = () => {
   const resultsToDisplay = loading ? cachedResults : filteredResults
 
   return (
-    <div className="bg-paleAccent min-h-screen pt-20 pb-12">
+    <div className="bg-gradient-to-b from-primary/50 to-secondary/20 min-h-screen pt-20 pb-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-bold text-darkAccent text-center mb-8">
           Event Results
@@ -187,7 +187,7 @@ const EventResults = () => {
 
               return (
                 <Card key={index}>
-                  <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white">
+                  <CardHeader className="bg-primary text-white">
                     <CardTitle className="text-center">
                       {result.item}
                     </CardTitle>

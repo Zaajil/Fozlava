@@ -135,7 +135,7 @@ const OffStageRegistration = () => {
   }
 
   return (
-    <div className="bg-lightAccent min-h-screen pt-12 pb-10">
+    <div className="bg-gradient-to-b from-primary/50 to-secondary/20 min-h-screen pt-12 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-darkAccent text-center mb-12">
           Off-Stage Event Registration
@@ -330,7 +330,7 @@ const OffStageRegistration = () => {
 
               <button
                 onClick={handleViewRegistrations}
-                className="w-full mt-4 bg-secondary text-white px-4 py-2 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-300"
+                className="w-full mt-4 bg-darkAccent/50 text-white px-4 py-2 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-300"
               >
                 View Registered Participants
               </button>

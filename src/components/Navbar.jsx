@@ -32,29 +32,30 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-pretty">
               FOZLAVA
             </span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  location.pathname === item.path
-                    ? "text-primary"
-                    : scrolled
-                    ? "text-gray-900"
-                    : "text-gray"
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
+  {navItems.map((item) => (
+    <Link
+      key={item.name}
+      to={item.path}
+      className={`text-base font-semibold px-4 py-2 rounded-full transition-colors hover:bg-primary hover:text-white ${
+        location.pathname === item.path
+          ? "bg-primary text-white"
+          : scrolled
+          ? "text-gray-900"
+          : "text-gray"
+      }`}
+    >
+      {item.name}
+    </Link>
+  ))}
+</div>
+
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
@@ -91,25 +92,24 @@ const Navbar = () => {
                 </button>
               </div>
               <div className="mt-6 px-4 sm:px-6">
-                <nav className="grid gap-y-8">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.path}
-                      onClick={() => setIsOpen(false)}
-                      className={`-m-3 p-3 flex items-center rounded-md hover:bg-gray-50 ${
-                        location.pathname === item.path
-                          ? "text-primary font-medium"
-                          : "text-gray-900"
-                      }`}
-                    >
-                      <span className="ml-3 text-base font-medium">
-                        {item.name}
-                      </span>
-                    </Link>
-                  ))}
-                </nav>
-              </div>
+  <nav className="grid gap-y-6">
+    {navItems.map((item) => (
+      <Link
+        key={item.name}
+        to={item.path}
+        onClick={() => setIsOpen(false)}
+        className={`text-center text-lg font-medium px-6 py-3 rounded-full border transition-colors hover:bg-primary hover:text-white ${
+          location.pathname === item.path
+            ? "bg-primary text-white"
+            : "text-gray-900 border-gray-300"
+        }`}
+      >
+        {item.name}
+      </Link>
+    ))}
+  </nav>
+</div>
+
             </div>
           </div>
         </div>
