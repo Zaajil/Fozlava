@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
 import { Calendar, Clock, MapPin, User, Briefcase, Phone, Hash } from 'lucide-react'
 
 const OffStageRegistration = () => {
@@ -135,15 +136,25 @@ const OffStageRegistration = () => {
   }
 
   return (
-    <div className="bg-gradient-to-b from-primary/50 to-secondary/20 min-h-screen pt-12 pb-10">
+    <div className="min-h-screen bg-gradient-to-b from-primary/50 to-secondary/20 pt-12 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-darkAccent text-center mb-12">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-5xl font-extrabold text-secondary text-center mb-12"
+        >
           Off-Stage Event Registration
-        </h1>
+        </motion.h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Today's Offstage Events Section */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-white shadow-lg rounded-lg overflow-hidden"
+          >
             <div className="bg-primary text-white py-4 px-6">
               <h2 className="text-2xl font-semibold">Today's Off-Stage Events</h2>
             </div>
@@ -155,7 +166,13 @@ const OffStageRegistration = () => {
                   {getTodaysEvents().map((item, index) => {
                     const { date, time } = formatDateTime(item.date, item.time)
                     return (
-                      <li key={index} className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 * index }}
+                        className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0"
+                      >
                         <h3 className="text-lg font-semibold text-darkAccent mb-2">{item.event}</h3>
                         <div className="flex items-center text-gray-600 mb-1">
                           <Calendar className="w-4 h-4 mr-2" />
@@ -169,16 +186,21 @@ const OffStageRegistration = () => {
                           <MapPin className="w-4 h-4 mr-2" />
                           <span>{item.venue}</span>
                         </div>
-                      </li>
+                      </motion.li>
                     )
                   })}
                 </ul>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Registration Form */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="bg-white shadow-lg rounded-lg overflow-hidden"
+          >
             <div className="bg-secondary text-white py-4 px-6">
               <h2 className="text-2xl font-semibold">Registration Form</h2>
             </div>
@@ -306,10 +328,12 @@ const OffStageRegistration = () => {
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                 </div>
 
-                <button
+                <motion.button
                   type="submit"
                   className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-300"
                   disabled={isLoading}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   {isLoading ? (
                     <div className="flex justify-center items-center">
@@ -318,24 +342,31 @@ const OffStageRegistration = () => {
                   ) : (
                     "Register"
                   )}
-                </button>
+                </motion.button>
               </form>
 
               {registrationNumber && (
-                <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md"
+                >
                   <p className="font-semibold">Registration Successful!</p>
                   <p>Your Registration Number: <span className="font-bold">{registrationNumber}</span></p>
-                </div>
+                </motion.div>
               )}
 
-              <button
+              <motion.button
                 onClick={handleViewRegistrations}
                 className="w-full mt-4 bg-darkAccent/50 text-white px-4 py-2 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 View Registered Participants
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
@@ -343,3 +374,4 @@ const OffStageRegistration = () => {
 }
 
 export default OffStageRegistration
+
