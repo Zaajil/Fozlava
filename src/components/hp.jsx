@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ArrowRight, Trophy,  Star, ChevronDown, ChevronUp } from 'lucide-react';
-
+import { Loader2, ArrowRight, Trophy,  Star, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import "../index.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [pointsTable, setPointsTable] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [, setShowConfetti] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [expandedTeam, setExpandedTeam] = useState(null);
 
   const departments = {
@@ -58,6 +58,15 @@ const HomePage = () => {
     fetchPointsTable();
   }, []);
 
+  useEffect(() => {
+    if (showConfetti) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+  }, [showConfetti]);
 
 
   const cardVariants = {
@@ -99,7 +108,7 @@ const HomePage = () => {
           className="text-6xl font-extrabold text-lightAccent text-center mb-12 relative"
         >
           <span className="relative z-10">Fozlava Point Table</span>
-          {/*<motion.span
+          <motion.span
             className="absolute inset-0 z-0"
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -107,7 +116,7 @@ const HomePage = () => {
           >
           <Sparkles className="w-12 h-12 text-lightAccent absolute -top-6 -left-6" />
             <Sparkles className="w-12 h-12 text-lightAccent absolute -bottom-6 -right-6" />
-          </motion.span>*/}
+          </motion.span>
         </motion.h1>
         <div className="mt-8">
           {loading ? (
