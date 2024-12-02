@@ -1,11 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import HomePage from "./components/HomePage";
-import EventResults from "./components/EventResults";
-import OffStageRegistration from "./components/OffStageRegistration";
-import RegisteredList from './components/RegisteredList';
-import Admin from "./components/admin";
+import HomePage from "./pages/HomePage";
+import EventResults from "./pages/EventResults";
+import OffStageRegistration from "./pages/OffStageRegistration";
+import RegisteredList from "./components/RegisteredList";
 
 const App = () => {
   return (
@@ -21,12 +20,10 @@ const App = () => {
             <Route path="/results" element={<EventResults />} />
             <Route path="/register" element={<OffStageRegistration />} />
             <Route path="/registered-list" element={<RegisteredList />} />
-            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
 
         {/* Footer at the bottom */}
-        
       </div>
     </Router>
   );
