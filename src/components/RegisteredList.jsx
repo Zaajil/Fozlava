@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, ChevronDown, Loader2, Users, AlertCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Footer from './Footer'
 
 const RegisteredList = () => {
   const [events, setEvents] = useState([])
@@ -81,125 +83,166 @@ const RegisteredList = () => {
   })
 
   return (
-    <div className=" bg-gradient-to-br from-primary via-secondary to-primary min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-lightAccent text-center mb-8">
-          Registered Participants
-        </h1>
+    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-10"></div>
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+            Registered Participants
+          </h1>
+        </motion.div>
 
-        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
+        >
           <div className="p-6 space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
-                <label htmlFor="event-select" className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Select Event
                 </label>
-                <div className="relative border border-gray-300 rounded-md focus-within:border-primary focus-within:ring-primary focus-within:ring-1">
-  <select
-    id="event-select"
-    value={selectedEvent}
-    onChange={handleEventChange}
-    className="block w-full pl-3 pr-10 py-2 text-base border-none focus:outline-none rounded-md"
-    disabled={isLoading}
-  >
-    <option value="">-- Select Event --</option>
-    {events.map((event, index) => (
-      <option key={index} value={event.event}>
-        {event.event}
-      </option>
-    ))}
-  </select>
-  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-    <ChevronDown className="h-4 w-4" />
-  </div>
-</div>
-
+                <div className="relative">
+                  <select
+                    value={selectedEvent}
+                    onChange={handleEventChange}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-4 pr-10 py-2.5 text-white appearance-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                    disabled={isLoading}
+                  >
+                    <option value="" className="bg-gray-900">Select Event</option>
+                    {events.map((event, index) => (
+                      <option key={index} value={event.event} className="bg-gray-900">
+                        {event.event}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none h-5 w-5" />
+                </div>
               </div>
 
               {selectedEvent && (
                 <div className="flex-1">
-                  <label htmlFor="search-input" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Search Participants
                   </label>
                   <div className="relative">
                     <input
-                      id="search-input"
                       type="text"
                       value={searchQuery}
                       onChange={handleSearchChange}
                       placeholder="Search by name, department, or registration number"
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
                     />
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Search className="h-5 w-5 text-gray-400" />
-                    </div>
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   </div>
                 </div>
               )}
             </div>
 
-            {isLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                <span className="ml-2 text-lg text-gray-700">Loading...</span>
-              </div>
-            ) : error ? (
-              <div className="text-center py-12">
-                <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                <p className="text-lg text-gray-700">{error}</p>
-              </div>
-            ) : selectedEvent && filteredBySearch.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-primary">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                        Registration Number
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                        Department
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                        Roll Number
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                        Group
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredBySearch.map((reg, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reg.regNum}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reg.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reg.department}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reg.rollNo}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reg.group || '-'}</td>
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-12 space-y-4"
+                >
+                  <Loader2 className="h-12 w-12 text-pink-500 animate-spin" />
+                  <p className="text-gray-300">Loading participants...</p>
+                </motion.div>
+              ) : error ? (
+                <motion.div
+                  key="error"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-12 space-y-4"
+                >
+                  <AlertCircle className="h-12 w-12 text-red-500" />
+                  <p className="text-gray-300">{error}</p>
+                </motion.div>
+              ) : selectedEvent && filteredBySearch.length > 0 ? (
+                <motion.div
+                  key="table"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative overflow-x-auto rounded-lg"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <span>{filteredBySearch.length} participants</span>
+                    </div>
+                  </div>
+                  
+                  <table className="w-full text-left">
+                    <thead className="bg-gradient-to-r from-pink-500 to-violet-500 text-white">
+                      <tr>
+                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Registration Number</th>
+                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Name</th>
+                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Department</th>
+                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Roll Number</th>
+                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Group</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : selectedEvent ? (
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-lg text-gray-700">No registrations found for this event.</p>
-              </div>
-            ) : (
-              <div className="text-center py-2 ">
-                <div className="h-1 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-lg text-gray-700">Please select an event to view registrations.</p>
-              </div>
-            )}
+                    </thead>
+                    <tbody className="divide-y divide-white/10">
+                      {filteredBySearch.map((reg, index) => (
+                        <motion.tr
+                          key={index}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="bg-white/5 hover:bg-white/10 transition-colors duration-200"
+                        >
+                          <td className="px-6 py-4 text-sm text-gray-300">{reg.regNum}</td>
+                          <td className="px-6 py-4 text-sm text-gray-300">{reg.name}</td>
+                          <td className="px-6 py-4 text-sm text-gray-300">{reg.department}</td>
+                          <td className="px-6 py-4 text-sm text-gray-300">{reg.rollNo}</td>
+                          <td className="px-6 py-4 text-sm text-gray-300">{reg.group || '-'}</td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </motion.div>
+              ) : selectedEvent ? (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-12 space-y-4"
+                >
+                  <Users className="h-12 w-12 text-gray-400" />
+                  <p className="text-gray-300">No registrations found for this event.</p>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="select"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-12 space-y-4"
+                >
+                  <Users className="h-12 w-12 text-gray-400" />
+                  <p className="text-gray-300">Please select an event to view registrations.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
       </div>
+    </div>
+    <Footer/>
     </div>
   )
 }
 
 export default RegisteredList
-

@@ -1,71 +1,27 @@
-import React, { useState, useEffect, useMemo } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Search, Award } from 'lucide-react'
-import { useInView } from 'react-intersection-observer'
-
-const Input = ({ className, ...props }) => (
-  <input
-    className={`w-full px-4 py-3 text-darkAccent border-2 border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary transition-all duration-300 ${className}`}
-    {...props}
-  />
-)
-
-const Card = ({ className, children, ...props }) => (
-  <motion.div
-    className={`bg-white shadow-xl rounded-lg overflow-hidden ${className}`}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    transition={{ duration: 0.3 }}
-    {...props}
-  >
-    {children}
-  </motion.div>
-)
-
-const CardHeader = ({ className, children, ...props }) => (
-  <div className={`px-6 py-4 ${className}`} {...props}>
-    {children}
-  </div>
-)
-
-const CardContent = ({ className, children, ...props }) => (
-  <div className={`px-6 py-4 ${className}`} {...props}>
-    {children}
-  </div>
-)
-
-const CardTitle = ({ className, children, ...props }) => (
-  <h3 className={`text-xl font-bold ${className}`} {...props}>
-    {children}
-  </h3>
-)
-
-const LoadingSkeleton = () => (
-  <div className="animate-pulse">
-    <div className="h-8 bg-gray-300 rounded w-3/4 mb-4"></div>
-    <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-    <div className="h-4 bg-gray-300 rounded w-5/6 mb-2"></div>
-    <div className="h-4 bg-gray-300 rounded w-4/6"></div>
-  </div>
-)
+import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import { Search, Award, Medal, Trophy, Loader2, Users } from 'lucide-react';
+import { useInView } from 'react-intersection-observer';
+import Footer from './Footer'
 
 const EventResults = () => {
-  const [results, setResults] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [visibleResults, setVisibleResults] = useState(12)
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [visibleResults, setVisibleResults] = useState(12);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [ref, inView] = useInView({
     threshold: 0,
     triggerOnce: false,
-  })
+  });
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        console.log("Fetching results...")
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxu0ehjZKgAxTq4REiMrfdZlE5eZ5IhyURpggvW0AJEA8ikdzqOaRrbeg3_2Ag5jIXJGg/exec")
-        const data = await response.json()
+        const response = await fetch(
+          "https://script.google.com/macros/s/AKfycbxu0ehjZKgAxTq4REiMrfdZlE5eZ5IhyURpggvW0AJEA8ikdzqOaRrbeg3_2Ag5jIXJGg/exec"
+        );
+        const data = await response.json();
 
         const combinedResults = [
           ...data.individual.map((result) => ({
@@ -82,210 +38,240 @@ const EventResults = () => {
             second: result.second || null,
             third: result.third || null,
           })),
-        ]
+        ];
 
         const groupedResults = combinedResults.reduce((acc, result) => {
           if (!acc[result.item]) {
-            acc[result.item] = { ...result, first: [], second: [], third: [] }
+            acc[result.item] = { ...result, first: [], second: [], third: [] };
           }
 
-          if (result.first) acc[result.item].first.push(result.first)
-          if (result.second) acc[result.item].second.push(result.second)
-          if (result.third) acc[result.item].third.push(result.third)
+          if (result.first) acc[result.item].first.push(result.first);
+          if (result.second) acc[result.item].second.push(result.second);
+          if (result.third) acc[result.item].third.push(result.third);
 
-          return acc
-        }, {})
+          return acc;
+        }, {});
 
-        const finalResults = Object.values(groupedResults)
-
-        setResults(finalResults)
+        setResults(Object.values(groupedResults));
       } catch (error) {
-        console.error("Error fetching results:", error)
+        console.error("Error fetching results:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchResults()
-  }, [])
+    fetchResults();
+  }, []);
 
   useEffect(() => {
     if (inView) {
-      setVisibleResults((prevVisible) => prevVisible + 12)
+      setVisibleResults((prev) => prev + 12);
     }
-  }, [inView])
+  }, [inView]);
 
-  const renderPrize = (prize, prizeLabel, type) => {
-    if (!prize || prize.length === 0) return null
-
-    const isValidPrize = prize.some((winner) =>
-      type === "individual"
-        ? typeof winner === "object" &&
-          (winner.name || winner.department || winner.year || winner.group)
-        : typeof winner === "string" && winner
-    )
-
-    if (!isValidPrize) return null
-
-    const bgColor = prizeLabel === "1st" ? "bg-yellow-100" : prizeLabel === "2nd" ? "bg-gray-100" : "bg-orange-100"
-    const textColor = prizeLabel === "1st" ? "text-yellow-800" : prizeLabel === "2nd" ? "text-gray-800" : "text-orange-800"
+  const renderWinner = (winner, index, type) => {
+    if (!winner) return null;
 
     return (
       <motion.div
-        className={`p-4 rounded-lg ${bgColor} ${textColor}`}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: index * 0.1 }}
+        className="flex items-center space-x-3"
       >
-        <h4 className="font-bold text-lg mb-2 flex items-center">
-          <Award className="mr-2" />
-          {prizeLabel} Prize
-        </h4>
-        {(Array.isArray(prize) ? prize : [prize]).map((winner, idx) => (
-          <motion.div
-            key={idx}
-            className="mb-2 last:mb-0"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: idx * 0.1 }}
-          >
-            {type === "individual" ? (
-              typeof winner === "object" ? (
-                <>
-                  {winner.name && <p className="font-semibold">{winner.name}</p>}
-                  {winner.department && winner.year && (
-                    <p className="text-sm">
-                      {winner.department}, {winner.year}
-                    </p>
-                  )}
-                  {winner.group && <p className="text-sm">{winner.group}</p>}
-                </>
-              ) : (
-                <p>{winner}</p>
-              )
-            ) : (
-              <p>{winner}</p>
-            )}
-          </motion.div>
-        ))}
+        {type === "individual" ? (
+          typeof winner === "object" ? (
+            <div className="flex-1">
+              <p className="font-medium text-gray-900 dark:text-gray-100">
+                {winner.name}
+              </p>
+              {winner.department && winner.year && (
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {winner.department}, {winner.year}
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="flex-1 text-gray-900 dark:text-gray-100">{winner}</p>
+          )
+        ) : (
+          <p className="flex-1 text-gray-900 dark:text-gray-100">{winner}</p>
+        )}
       </motion.div>
-    )
-  }
+    );
+  };
 
   const filteredResults = useMemo(() => {
-    const searchRegex = new RegExp(searchTerm, 'i')
     return results.filter((result) => {
-      return (
-        searchRegex.test(result.item) ||
-        result.first.some((winner) => searchRegex.test(JSON.stringify(winner))) ||
-        result.second.some((winner) => searchRegex.test(JSON.stringify(winner))) ||
-        result.third.some((winner) => searchRegex.test(JSON.stringify(winner)))
-      )
-    })
-  }, [results, searchTerm])
+      const matchesSearch = 
+        result.item.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        result.first.some((w) => JSON.stringify(w).toLowerCase().includes(searchTerm.toLowerCase())) ||
+        result.second.some((w) => JSON.stringify(w).toLowerCase().includes(searchTerm.toLowerCase())) ||
+        result.third.some((w) => JSON.stringify(w).toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const resultsToDisplay = filteredResults.slice(0, visibleResults)
+      const matchesCategory = 
+        selectedCategory === "all" || 
+        result.type === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [results, searchTerm, selectedCategory]);
+
+  const resultsToDisplay = filteredResults.slice(0, visibleResults);
 
   return (
-    <div className=" bg-gradient-to-br from-primary via-secondary to-primary min-h-screen pt-20 pb-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          className="text-5xl font-bold text-lightAccent text-center mb-12"
+    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-24 pb-12">
+      <div className="absolute inset-0 opacity-10 bg-cover bg-center" />
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
         >
-          Event Results
-        </motion.h2>
-        
+          <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+            Event Results
+          </h1>
+          <p className="text-gray-400 text-xl">
+            Discover the achievements of our talented participants
+          </p>
+        </motion.div>
+
         <motion.div
-          className="mb-12 flex justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          className="max-w-2xl mx-auto mb-12 space-y-4"
         >
-          <div className="relative w-full max-w-md">
-            <Input
+          <div className="relative">
+            <input
               type="text"
-              placeholder="Search by event, team, or participant..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pr-12"
+              placeholder="Search events or participants..."
+              className="w-full px-6 py-4 bg-white/10 backdrop-blur-lg border border-gray-700 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
             />
-            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary" size={20} />
+            <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
+
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === "all"
+                  ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              }`}
+            >
+              All Events
+            </button>
+            <button
+              onClick={() => setSelectedCategory("individual")}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === "individual"
+                  ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              }`}
+            >
+              Individual
+            </button>
+            <button
+              onClick={() => setSelectedCategory("group")}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === "group"
+                  ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              }`}
+            >
+              Group
+            </button>
           </div>
         </motion.div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, index) => (
-              <Card key={index}>
-                <CardContent>
-                  <LoadingSkeleton />
-                </CardContent>
-              </Card>
-            ))}
+          <div className="flex flex-col items-center justify-center h-64">
+            <Loader2 className="w-12 h-12 text-purple-500 animate-spin mb-4" />
+            <p className="text-gray-400">Loading results...</p>
           </div>
         ) : resultsToDisplay.length === 0 ? (
           <motion.div
-            className="text-center text-darkAccent text-xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            className="text-center py-12"
           >
-            No results found.
+            <Users className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-medium text-gray-400">No results found</h3>
+            <p className="text-gray-500 mt-2">Try adjusting your search criteria</p>
           </motion.div>
         ) : (
-          <AnimatePresence>
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              {resultsToDisplay.map((result, index) => {
-                const hasValidResults =
-                  (result.first && result.first.length > 0) ||
-                  (result.second && result.second.length > 0) ||
-                  (result.third && result.third.length > 0)
-
-                if (!hasValidResults) return null
-
-                return (
-                  <Card key={index}>
-                    <CardHeader className="bg-primary text-white">
-                      <CardTitle className="text-center flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {resultsToDisplay.map((result, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative group"
+              >
+                <div className="absolute inset-0  rounded-2xl blur opacity-25 group-hover:opacity-40 transition-opacity" />
+                <div className="relative bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+                  <div className="px-6 py-4 bg-gray-800/50 border-b border-gray-700">
+                    <div className="flex items-center justify-center">
+                      <h3 className="text-lg font-semibold text-white">
                         {result.item}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {renderPrize(result.first, "1st", result.type)}
-                        {renderPrize(result.second, "2nd", result.type)}
-                        {renderPrize(result.third, "3rd", result.type)}
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="p-6 space-y-6 ">
+                    {result.first.length > 0 && (
+                      <div className="space-x-10">
+                        <div className="flex items-center space-x-2 text-yellow-500">
+                          <Trophy className="w-5 h-5" />
+                          <h4 className="font-medium">First Place</h4>
+                        </div>
+                        {result.first.map((winner, idx) => renderWinner(winner, idx, result.type))}
                       </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </motion.div>
-          </AnimatePresence>
+                    )}
+                    {result.second.length > 0 && (
+                      <div className="space-x-10">
+                        <div className="flex items-center space-x-2 text-gray-400">
+                          <Medal className="w-5 h-5" />
+                          <h4 className="font-medium">Second Place</h4>
+                        </div>
+                        {result.second.map((winner, idx) => renderWinner(winner, idx, result.type))}
+                      </div>
+                    )}
+                    {result.third.length > 0 && (
+                      <div className="space-x-10">
+                        <div className="flex items-center space-x-2 text-orange-600">
+                          <Award className="w-5 h-5" />
+                          <h4 className="font-medium">Third Place</h4>
+                        </div>
+                        {result.third.map((winner, idx) => renderWinner(winner, idx, result.type))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         )}
-        
+
         {!loading && filteredResults.length > visibleResults && (
-          <div ref={ref} className="flex justify-center mt-8">
-            <motion.div
-              className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
+          <div ref={ref} className="flex justify-center mt-12">
+            <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
       </div>
     </div>
-  )
-}
+    <Footer/>
+    </div>
+  );
+  
+};
 
-export default EventResults
-
+export default EventResults;

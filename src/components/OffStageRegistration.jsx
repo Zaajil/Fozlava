@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { Calendar, Clock, MapPin, User, Briefcase, Phone, Hash } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Briefcase, Phone, Hash, Sparkles } from 'lucide-react'
+import Footer from './Footer'
 
 const OffStageRegistration = () => {
   const [registrationNumber, setRegistrationNumber] = useState("")
@@ -136,33 +137,44 @@ const OffStageRegistration = () => {
   }
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-primary via-secondary to-primary pt-12 pb-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h1
+    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="absolute inset-0  bg-cover bg-center mix-blend-overlay opacity-10"></div>
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-5xl font-extrabold text-lightAccent text-center mb-12"
+          className="text-center mb-16"
         >
-          Off-Stage Event Registration
-        </motion.h1>
+          <h1 className="text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+            Off-Stage Events
+          </h1>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Today's Offstage Events Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Today's Events Card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white shadow-lg rounded-lg overflow-hidden"
+            transition={{ duration: 0.6 }}
+            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
           >
-            <div className="bg-darkAccent text-white text-center py-4 px-6">
-              <h2 className="text-2xl font-semibold">Today's Off-Stage Events</h2>
+            <div className="bg-gradient-to-r from-pink-500 to-violet-500 p-6">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <Calendar className="w-6 h-6" />
+                Today's Events
+              </h2>
             </div>
+            
             <div className="p-6">
               {getTodaysEvents().length === 0 ? (
-                <p className="text-center text-gray-500">No events today.</p>
+                <div className="text-center py-8">
+                  <Clock className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-300">No events scheduled for today</p>
+                </div>
               ) : (
-                <ul className="space-y-4">
+                <ul className="space-y-6">
                   {getTodaysEvents().map((item, index) => {
                     const { date, time } = formatDateTime(item.date, item.time)
                     return (
@@ -170,21 +182,23 @@ const OffStageRegistration = () => {
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 * index }}
-                        className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0"
+                        transition={{ delay: index * 0.1 }}
+                        className="bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all duration-300"
                       >
-                        <h3 className="text-lg font-semibold text-darkAccent mb-2">{item.event}</h3>
-                        <div className="flex items-center text-gray-600 mb-1">
-                          <Calendar className="w-4 h-4 mr-2" />
-                          <span>{date}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600 mb-1">
-                          <Clock className="w-4 h-4 mr-2" />
-                          <span>{time}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <MapPin className="w-4 h-4 mr-2" />
-                          <span>{item.venue}</span>
+                        <h3 className="text-xl font-bold text-white mb-3">{item.event}</h3>
+                        <div className="space-y-2 text-gray-300">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-pink-400" />
+                            <span>{date}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-violet-400" />
+                            <span>{time}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-indigo-400" />
+                            <span>{item.venue}</span>
+                          </div>
                         </div>
                       </motion.li>
                     )
@@ -194,174 +208,185 @@ const OffStageRegistration = () => {
             </div>
           </motion.div>
 
-          {/* Registration Form */}
+          {/* Registration Form Card */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-white shadow-lg rounded-lg overflow-hidden"
+            transition={{ duration: 0.6 }}
+            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
           >
-            <div className="bg-secondary text-white py-4 px-6">
-              <h2 className="text-2xl font-semibold">Registration Form</h2>
+            <div className="bg-gradient-to-r from-violet-500 to-pink-500 p-6">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <User className="w-6 h-6" />
+                Registration Form
+              </h2>
             </div>
+
             <div className="p-6">
-              <form onSubmit={(e) => { e.preventDefault(); handleRegister(); }} className="space-y-4">
-                <div>
-                  <label htmlFor="event" className="block text-sm font-medium text-gray-700 mb-1">
-                    Event
-                  </label>
-                  <select
-                    id="event"
-                    value={event}
-                    onChange={(e) => setEvent(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                  >
-                    <option value="">-- Select Event --</option>
-                    {getTodaysEvents().map((item, index) => (
-                      <option key={index} value={item.event}>
-                        {item.event}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.event && <p className="text-red-500 text-xs mt-1">{errors.event}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Name
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md shadow-sm pl-10 pr-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                      placeholder="Enter your full name"
-                    />
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                  </div>
-                  {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">
-                    Department
-                  </label>
-                  <div className="relative">
+              <form onSubmit={(e) => { e.preventDefault(); handleRegister(); }} className="space-y-6">
+                <div className="space-y-4">
+                  {/* Event Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Event</label>
                     <select
-                      id="department"
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md shadow-sm pl-10 pr-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                      value={event}
+                      onChange={(e) => setEvent(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
                     >
-                      <option value="">-- Select Department --</option>
-                      {[
-                        "Arabic", "B.Voc Auto", "B.Voc IT", "BCom CA", "BMMC", "Botany",
-                        "Chemistry", "Commerce", "Computer Science", "Economics",
-                        "English (Aided)", "English (SF)", "Functional English", "Geology",
-                        "History", "Library Science", "Malayalam", "Management Studies",
-                        "Maths", "MCJ", "Physics", "Psychology (Aided)", "Psychology (SF)",
-                        "Sociology", "Statistics", "Zoology"
-                      ].map((dept) => (
-                        <option key={dept} value={dept}>{dept}</option>
+                      <option value="" className="bg-gray-900">Select Event</option>
+                      {getTodaysEvents().map((item, index) => (
+                        <option key={index} value={item.event} className="bg-gray-900">
+                          {item.event}
+                        </option>
                       ))}
                     </select>
-                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    {errors.event && (
+                      <p className="text-pink-500 text-sm mt-1">{errors.event}</p>
+                    )}
                   </div>
-                  {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department}</p>}
-                </div>
 
-                <div>
-                  <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1">
-                    Year
-                  </label>
-                  <select
-                    id="year"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                  >
-                    <option value="">-- Select Year --</option>
-                    <option value="UG 1st Year">UG 1st Year</option>
-                    <option value="UG 2nd Year">UG 2nd Year</option>
-                    <option value="UG 3rd Year">UG 3rd Year</option>
-                    <option value="PG 1st Year">PG 1st Year</option>
-                    <option value="PG 2nd Year">PG 2nd Year</option>
-                  </select>
-                  {errors.year && <p className="text-red-500 text-xs mt-1">{errors.year}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="rollNo" className="block text-sm font-medium text-gray-700 mb-1">
-                    Roll No
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="rollNo"
-                      type="text"
-                      value={rollNo}
-                      onChange={(e) => setRollNo(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md shadow-sm pl-10 pr-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                      placeholder="Enter your roll number"
-                    />
-                    <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                  {/* Name Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                        placeholder="Enter your full name"
+                      />
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    </div>
+                    {errors.name && (
+                      <p className="text-pink-500 text-sm mt-1">{errors.name}</p>
+                    )}
                   </div>
-                  {errors.rollNo && <p className="text-red-500 text-xs mt-1">{errors.rollNo}</p>}
-                </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="phone"
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md shadow-sm pl-10 pr-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                      placeholder="Enter your phone number"
-                    />
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                  {/* Department Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Department</label>
+                    <div className="relative">
+                      <select
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                      >
+                        <option value="" className="bg-gray-900">Select Department</option>
+                        {[
+                          "Arabic", "B.Voc Auto", "B.Voc IT", "BCom CA", "BMMC", "Botany",
+                          "Chemistry", "Commerce", "Computer Science", "Economics",
+                          "English (Aided)", "English (SF)", "Functional English", "Geology",
+                          "History", "Library Science", "Malayalam", "Management Studies",
+                          "Maths", "MCJ", "Physics", "Psychology (Aided)", "Psychology (SF)",
+                          "Sociology", "Statistics", "Zoology"
+                        ].map((dept) => (
+                          <option key={dept} value={dept} className="bg-gray-900">{dept}</option>
+                        ))}
+                      </select>
+                      <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    </div>
+                    {errors.department && (
+                      <p className="text-pink-500 text-sm mt-1">{errors.department}</p>
+                    )}
                   </div>
-                  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+
+                  {/* Year Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Year</label>
+                    <select
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                    >
+                      <option value="" className="bg-gray-900">Select Year</option>
+                      {["UG 1st Year", "UG 2nd Year", "UG 3rd Year", "PG 1st Year", "PG 2nd Year"].map((y) => (
+                        <option key={y} value={y} className="bg-gray-900">{y}</option>
+                      ))}
+                    </select>
+                    {errors.year && (
+                      <p className="text-pink-500 text-sm mt-1">{errors.year}</p>
+                    )}
+                  </div>
+
+                  {/* Roll Number Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Roll Number</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={rollNo}
+                        onChange={(e) => setRollNo(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                        placeholder="Enter your roll number"
+                      />
+                      <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    </div>
+                    {errors.rollNo && (
+                      <p className="text-pink-500 text-sm mt-1">{errors.rollNo}</p>
+                    )}
+                  </div>
+
+                  {/* Phone Number Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                        placeholder="Enter your phone number"
+                      />
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                    </div>
+                    {errors.phone && (
+                      <p className="text-pink-500 text-sm mt-1">{errors.phone}</p>
+                    )}
+                  </div>
                 </div>
 
+                {/* Submit Button */}
                 <motion.button
                   type="submit"
-                  className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-300"
+                  className="w-full bg-gradient-to-r from-pink-500 to-violet-500 text-white py-3 rounded-lg font-medium hover:from-pink-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
                   disabled={isLoading}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   {isLoading ? (
                     <div className="flex justify-center items-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                     </div>
                   ) : (
-                    "Register"
+                    "Register Now"
                   )}
                 </motion.button>
               </form>
 
+              {/* Success Message */}
               {registrationNumber && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md"
+                  className="mt-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg p-4"
                 >
-                  <p className="font-semibold">Registration Successful!</p>
-                  <p>Your Registration Number: <span className="font-bold">{registrationNumber}</span></p>
+                  <div className="flex items-center gap-2 text-emerald-400 font-medium mb-1">
+                    <Sparkles className="w-5 h-5" />
+                    <span>Registration Successful!</span>
+                  </div>
+                  <p className="text-white">
+                    Your Registration Number: <span className="font-mono font-bold">{registrationNumber}</span>
+                  </p>
                 </motion.div>
               )}
 
+              {/* View Registrations Button */}
               <motion.button
                 onClick={handleViewRegistrations}
-                className="w-full mt-4 bg-darkAccent/50 text-white px-4 py-2 rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="w-full mt-4 bg-white/5 border border-white/10 text-white py-3 rounded-lg font-medium hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 View Registered Participants
               </motion.button>
@@ -370,8 +395,9 @@ const OffStageRegistration = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </div>
   )
 }
 
 export default OffStageRegistration
-
