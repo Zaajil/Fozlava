@@ -136,13 +136,13 @@ const OffStageRegistration = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/50 to-secondary/20 pt-12 pb-10">
+    <div className="min-h-screen  bg-gradient-to-br from-primary via-secondary to-primary pt-12 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-5xl font-extrabold text-secondary text-center mb-12"
+          className="text-5xl font-extrabold text-lightAccent text-center mb-12"
         >
           Off-Stage Event Registration
         </motion.h1>
@@ -155,7 +155,7 @@ const OffStageRegistration = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white shadow-lg rounded-lg overflow-hidden"
           >
-            <div className="bg-primary text-white py-4 px-6">
+            <div className="bg-darkAccent text-white text-center py-4 px-6">
               <h2 className="text-2xl font-semibold">Today's Off-Stage Events</h2>
             </div>
             <div className="p-6">

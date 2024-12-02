@@ -58,15 +58,15 @@ const HomePage = () => {
     fetchPointsTable();
   }, []);
 
-  useEffect(() => {
+  {/*useEffect(() => {
     if (showConfetti) {
       confetti({
         particleCount: 100,
-        spread: 70,
+        spread: 100,
         origin: { y: 0.6 }
       });
     }
-  }, [showConfetti]);
+  }, [showConfetti]);*/}
 
 
   const cardVariants = {
@@ -108,15 +108,15 @@ const HomePage = () => {
           className="text-6xl font-extrabold text-lightAccent text-center mb-12 relative"
         >
           <span className="relative z-10">Fozlava Point Table</span>
-          <motion.span
+          {/*<motion.span
             className="absolute inset-0 z-0"
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <Sparkles className="w-12 h-12 text-lightAccent absolute -top-6 -left-6" />
+          <Sparkles className="w-12 h-12 text-lightAccent absolute -top-6 -left-6" />
             <Sparkles className="w-12 h-12 text-lightAccent absolute -bottom-6 -right-6" />
-          </motion.span>
+          </motion.span>*/}
         </motion.h1>
         <div className="mt-8">
           {loading ? (

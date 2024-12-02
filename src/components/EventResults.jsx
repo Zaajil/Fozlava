@@ -187,10 +187,10 @@ const EventResults = () => {
   const resultsToDisplay = filteredResults.slice(0, visibleResults)
 
   return (
-    <div className="bg-gradient-to-b from-primary/50 to-secondary/20 min-h-screen pt-20 pb-12">
+    <div className=" bg-gradient-to-br from-primary via-secondary to-primary min-h-screen pt-20 pb-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-5xl font-bold text-darkAccent text-center mb-12"
+          className="text-5xl font-bold text-lightAccent text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}

@@ -20,12 +20,11 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Results", path: "/results" },
     { name: "Register", path: "/register" },
-    { name: "Gallery", path: "/gallery" },
   ];
 
   return (
     <nav
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
+      className={`fixed w-full top-0 z-50 transition-all duration-300  ${
         scrolled ? "bg-lightAccent/50 shadow-lg" : "bg-transparent"
       }`}
     >
@@ -58,7 +57,7 @@ const Navbar = () => {
 
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden ">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={`p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white ${

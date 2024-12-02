@@ -13,29 +13,29 @@ const Gallery = () => {
   // Fetch photos from Google Drive
   const fetchPhotosFromDrive = async () => {
     try {
-      console.log('Fetching photos from Google Drive...'); // Log fetching status
+      console.log('Fetching photos from Google Drive...');
       const response = await fetch(
         `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}' in parents and mimeType contains 'image/'&key=${API_KEY}&fields=files(id,name)`
       );
-  
+    
       console.log('API response status:', response.status); // Log API response status
       
       if (response.ok) {
         const data = await response.json();
-        console.log('API response data:', data); // Log entire API response data
-  
+        console.log('API response data:', data);
+    
         // Map the response to get the image URLs
         const photos = data.files.map(file => {
-          const url = `https://cors-anywhere.herokuapp.com/https://drive.google.com/uc?export=view&id=${file.id}`;
-
-          console.log('Generated image URL:', url); // Log each generated image URL
+          // Convert the shareable link to direct image URL
+          const url = `https://drive.google.com/uc?export=view&id=${file.id}`;
+          console.log(`Generated image URL: ${url}`);
           return {
             id: file.id,
             name: file.name,
             url: url,
           };
         });
-  
+        
         setPhotos(photos);
       } else {
         console.error('Error fetching photos:', response.status, response.statusText);
@@ -44,7 +44,6 @@ const Gallery = () => {
       console.error('Error fetching photos:', error);
     }
   };
-  
 
   return (
     <div className="pt-16 bg-gray-100 min-h-screen">
@@ -57,15 +56,11 @@ const Gallery = () => {
           photos.map((photo, index) => (
             <div key={index} className="relative w-full">
               <img
-  key={index}
-  src={photo.url}
-  alt={photo.name}
-  style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-  className="rounded shadow-md"
-/>
-
-
-
+                src={photo.url}
+                alt={`Uploaded on ${photo.name}`} // Alt tag for accessibility
+                style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                className="rounded shadow-md"
+              />
             </div>
           ))
         )}
