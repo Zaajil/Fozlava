@@ -14,6 +14,8 @@ const Admin = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [loadingPDF, setLoadingPDF] = useState(false);
+
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -87,24 +89,26 @@ const Admin = () => {
 
   // Function to download the PDF
   const downloadPDF = () => {
-    const doc = new jsPDF()
-
+    setLoadingPDF(true); // Start loading
+    
+    const doc = new jsPDF();
+  
     // Function to add the title to the top center of the page
     const addTitle = () => {
-        doc.setFontSize(20)
-        const title = selectedEvent || "Event"
-        const titleWidth = doc.getTextWidth(title) // Get the width of the title
-        const centerX = (doc.internal.pageSize.width - titleWidth) / 2 // Calculate the X position to center the title
-        doc.text(title, centerX, 20) // Place title at the calculated position
-    }
-
+      doc.setFontSize(20);
+      const title = selectedEvent || "Event";
+      const titleWidth = doc.getTextWidth(title); // Get the width of the title
+      const centerX = (doc.internal.pageSize.width - titleWidth) / 2; // Calculate the X position to center the title
+      doc.text(title, centerX, 20); // Place title at the calculated position
+    };
+  
     // Add the title on the first page
-    addTitle()
-
+    addTitle();
+  
     // Add table header
-    const tableColumn = ["Registration Number", "Name", "Department", "Roll Number", "Group"]
-    const tableRows = []
-
+    const tableColumn = ["Registration Number", "Name", "Department", "Roll Number", "Group"];
+    const tableRows = [];
+  
     // Prepare data rows
     filteredBySearch.forEach((reg) => {
       const row = [
@@ -113,19 +117,23 @@ const Admin = () => {
         reg.department,
         reg.rollNo,
         reg.group || "-", // Fallback to '-' if the group is empty
-      ]
-      tableRows.push(row)
-    })
-
+      ];
+      tableRows.push(row);
+    });
+  
     // Add table to the PDF
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
       startY: 30, // Start below the title
-    })
+    });
+  
     // Save the generated PDF
-    doc.save(`${selectedEvent || "Event"}.pdf`) // Name the PDF with the event name
-}
+    doc.save(`${selectedEvent || "Event"}.pdf`); // Name the PDF with the event name
+    
+    setLoadingPDF(false); // Stop loading once the PDF is saved
+  };
+  
 
 
 
@@ -199,10 +207,15 @@ const Admin = () => {
               <button
                 onClick={downloadPDF}
                 className="px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all duration-200"
+                disabled={loadingPDF}
               >
-                Download PDF
-              </button>
-            </div>
+                {loadingPDF ? (
+      <Loader2 className="h-5 w-5 text-white animate-spin" />
+    ) : (
+      "Download PDF"
+    )}
+  </button>
+</div>
 
             <AnimatePresence mode="wait">
               {isLoading ? (
