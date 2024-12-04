@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import ResultCard from '../components/ResultCard';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
-import { useEventResults, useFilteredResults } from '../useEventResults';
+import { useEventResults, useFilteredResults } from '../ui/useEventResults';
 import Footer from '../components/Footer';
 
 function EventResults() {
@@ -92,20 +92,18 @@ function EventResults() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
               layout
             >
               {resultsToDisplay.map((result, index) => {
-  console.log(result); // Check structure
-  return (
-    <ResultCard
-      key={result.item}
-      {...result}
-      index={index}
-    />
-  );
-})}
-
+                return (
+                  <ResultCard
+                    key={result.item}
+                    {...result}
+                    index={index}
+                  />
+                );
+              })}
             </motion.div>
           )}
 

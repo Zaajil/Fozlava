@@ -63,7 +63,7 @@ const Footer = () => {
           className="pt-8 mt-8 border-t border-white/10"
         >
           <p className="text-center text-gray-300 text-sm flex items-center justify-center gap-1">
-            Made with <Heart className="w-4 h-4 text-red-500" /> by Department of Computer Science © {currentYear}
+            Made with <Heart className="w-4 h-4 text-red-500" /> © {currentYear}
           </p>
         </motion.div>
       </div>
