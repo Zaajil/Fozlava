@@ -37,7 +37,7 @@ const OffStageRegistration = () => {
   const fetchTodayEvents = useCallback(async () => {
     try {
       const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbzE0jNvKGLm0Sn3EEqhZdpioRIXGnK2fyb9zRPJ3nqWIHKBdOpEvYD9qNoT_mfbB6D6yA/exec"
+        "https://script.google.com/macros/s/AKfycbwbIhuqDQnCJlyRswUlMNNT-m-jPiJ_GEkayvQuFF0_PXav7eh7eQKTWOuJhReAp0-laA/exec"
       );
       const data = await response.json();
       setTodayEvents(data);
@@ -49,6 +49,11 @@ const OffStageRegistration = () => {
   useEffect(() => {
     fetchRegistrationData();
     fetchTodayEvents();
+    const intervalId = setInterval(() => {
+      fetchTodayEvents();
+    }, 5000); // Poll every 5 seconds
+  
+    return () => clearInterval(intervalId); // Cleanup
   }, [fetchRegistrationData, fetchTodayEvents]);
 
   const formatDateTime = useCallback((dateString, timeString) => {
@@ -91,6 +96,21 @@ const OffStageRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const selectedEvent = todayEvents.find(
+      (event) => event.event === formData.event
+    );
+  
+    if (!selectedEvent) {
+      setErrors({ event: "Please select a valid event." });
+      return;
+    }
+  
+    if (selectedEvent.status === "OFF") {
+      setErrors({ event: "Registration for this event is closed." });
+      return;
+    }
+  
 
     const errors = {};
     if (!formData.name) errors.name = "Name is required.";

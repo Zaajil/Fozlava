@@ -33,8 +33,13 @@ const RegistrationForm = ({
         >
           <option value="" className="bg-gray-900">Select Event</option>
           {todayEvents.map((item, index) => (
-            <option key={index} value={item.event} className="bg-gray-900">
-              {item.event}
+            <option
+              key={index}
+              value={item.event}
+              disabled={item.status === "OFF"}
+              className="bg-gray-900"
+            >
+              {item.event} {item.status === "OFF" ? "(Registration Closed)" : ""}
             </option>
           ))}
         </select>

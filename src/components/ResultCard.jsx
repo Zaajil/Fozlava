@@ -46,9 +46,9 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
       const validWinners = winnerArray.filter(winner => winner.name && winner.name.trim() !== '');
       if (validWinners.length > 0) {
         return (
-          <div className="flex items-start space-x-2 sm:space-x-4 mb-2 sm:mb-4">
+          <div className="flex relative left-7 items-start space-x-2 sm:space-x-4 mb-2 sm:mb-4">
             <img src={badgeSrc} alt={`${position} Badge`} className="w-6 sm:w-8 h-auto" />
-            <div className={`flex flex-col ${calculateFontSize(validWinners.length)}`}>
+            <div className={`flex flex-col relative bottom-1 ${calculateFontSize(validWinners.length)}`}>
               {validWinners.map((winner, idx) => (
                 <motion.div
                   key={idx}
@@ -181,8 +181,8 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
               {renderBadge(second, Secondbadge, 'Second')}
               {renderBadge(third, Thirdbadge, 'Third')}
             </div>
-            <div className="mt-1 sm:mt-2 relative bottom-2 sm:bottom-3">
-              <img src={Congrats} alt="Congratulations" className="w-24 sm:w-32 mx-auto" />
+            <div className="mt-1 sm:mt-2 relative bottom-2 sm:bottom-4">
+              <img src={Congrats} alt="Congratulations" className="w-36 sm:w-36 mx-auto" />
             </div>
           </div>
         </div>
