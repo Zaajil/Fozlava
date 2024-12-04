@@ -1,137 +1,223 @@
-import { useState, useEffect } from 'react'
-import { Search, ChevronDown, Loader2, Users, AlertCircle } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react';
+import { Search, ChevronDown, Download, Loader2, Users, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { jsPDF } from "jspdf";
-import "jspdf-autotable"; // Import the autoTable plugin
+import "jspdf-autotable";
 
-import Footer from './Footer'
+import Footer from './Footer';
+
+const DownloadButton = ({ onClick, isLoading, disabled }) => (
+  <motion.button
+    onClick={onClick}
+    disabled={isLoading || disabled}
+    className="group relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold text-white rounded-lg bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 active:scale-95"
+    whileHover={{ boxShadow: "0 0 20px rgba(236, 72, 153, 0.5)" }}
+    whileTap={{ scale: 0.95 }}
+  >
+    <span className="relative flex items-center gap-2">
+      {isLoading ? (
+        <Loader2 className="h-5 w-5 animate-spin" />
+      ) : (
+        <Download className="h-5 w-5 transition-transform group-hover:translate-y-0.5" />
+      )}
+      {isLoading ? 'Generating PDF...' : 'Download PDF'}
+    </span>
+  </motion.button>
+);
+
+const EmptyState = ({ message }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="flex flex-col items-center justify-center py-12 space-y-4"
+  >
+    <Users className="h-12 w-12 text-gray-400" />
+    <p className="text-gray-300">{message}</p>
+  </motion.div>
+);
+
+const LoadingState = ({ message }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="flex flex-col items-center justify-center py-12 space-y-4"
+  >
+    <Loader2 className="h-12 w-12 text-pink-500 animate-spin" />
+    <p className="text-gray-300">{message}</p>
+  </motion.div>
+);
+
+const ErrorState = ({ message }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="flex flex-col items-center justify-center py-12 space-y-4"
+  >
+    <AlertCircle className="h-12 w-12 text-red-500" />
+    <p className="text-gray-300">{message}</p>
+  </motion.div>
+);
+
+const ParticipantsTable = ({ participants }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.2 }}
+    className="relative overflow-x-auto rounded-lg"
+  >
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-2 text-gray-300">
+        <span>{participants.length} participants</span>
+      </div>
+    </div>
+
+    <table className="w-full text-left">
+      <thead className="bg-gradient-to-r from-pink-500 to-violet-500 text-white">
+        <tr>
+          <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Registration Number</th>
+          <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Name</th>
+          <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Department</th>
+          <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Roll Number</th>
+          <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Group</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-white/10">
+        {participants.map((reg, index) => (
+          <motion.tr
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05, duration: 0.2 }}
+            className="bg-white/5 hover:bg-white/10 transition-colors duration-200"
+          >
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.regNum}</td>
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.name}</td>
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.department}</td>
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.rollNo}</td>
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.group || '-'}</td>
+          </motion.tr>
+        ))}
+      </tbody>
+    </table>
+  </motion.div>
+);
 
 const Admin = () => {
-  const [events, setEvents] = useState([])
-  const [registrations, setRegistrations] = useState([])
-  const [selectedEvent, setSelectedEvent] = useState("")
-  const [filteredRegistrations, setFilteredRegistrations] = useState([])
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [events, setEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState("");
+  const [filteredRegistrations, setFilteredRegistrations] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [loadingPDF, setLoadingPDF] = useState(false);
-
 
   useEffect(() => {
     const fetchEvents = async () => {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await fetch(
           'https://script.google.com/macros/s/AKfycbzE0jNvKGLm0Sn3EEqhZdpioRIXGnK2fyb9zRPJ3nqWIHKBdOpEvYD9qNoT_mfbB6D6yA/exec'
-        )
-        if (!response.ok) throw new Error('Failed to fetch events')
-        const data = await response.json()
-        setEvents(data)
+        );
+        if (!response.ok) throw new Error('Failed to fetch events');
+        const data = await response.json();
+        setEvents(data);
       } catch (error) {
-        console.error("Error fetching events:", error)
-        setError('Failed to load events. Please try again later.')
+        console.error("Error fetching events:", error);
+        setError('Failed to load events. Please try again later.');
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchEvents()
-  }, [])
+    fetchEvents();
+  }, []);
 
   const fetchRegistrations = async (event) => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch(
         `https://script.google.com/macros/s/AKfycbzxzB61OITDNFIdKpk_eYKUbz59p-504uIukXZT7qOw2yuD55YldAmTfmmdGpVM6HM/exec?event=${encodeURIComponent(event)}`
-      )
-      if (!response.ok) throw new Error('Failed to fetch registrations')
-      const data = await response.json()
-      setRegistrations(data)
+      );
+      if (!response.ok) throw new Error('Failed to fetch registrations');
+      const data = await response.json();
+      setRegistrations(data);
     } catch (error) {
-      console.error("Error fetching registrations data:", error)
-      setError('Failed to load registrations. Please try again later.')
+      console.error("Error fetching registrations data:", error);
+      setError('Failed to load registrations. Please try again later.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleEventChange = (e) => {
-    const event = e.target.value
-    setSelectedEvent(event)
-    if (event) fetchRegistrations(event)
-    else setRegistrations([])
-  }
+    const event = e.target.value;
+    setSelectedEvent(event);
+    if (event) fetchRegistrations(event);
+    else setRegistrations([]);
+  };
 
   useEffect(() => {
     if (selectedEvent && registrations.length > 0) {
-      const filtered = registrations.filter((reg) => reg.event === selectedEvent)
-      setFilteredRegistrations(filtered)
+      const filtered = registrations.filter((reg) => reg.event === selectedEvent);
+      setFilteredRegistrations(filtered);
     } else {
-      setFilteredRegistrations([])
+      setFilteredRegistrations([]);
     }
-  }, [selectedEvent, registrations])
+  }, [selectedEvent, registrations]);
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value)
-  }
+    setSearchQuery(e.target.value);
+  };
 
   const filteredBySearch = filteredRegistrations.filter((reg) => {
-    const searchTerm = searchQuery.toLowerCase()
+    const searchTerm = searchQuery.toLowerCase();
     return (
       reg.name.toLowerCase().includes(searchTerm) ||
       reg.department.toLowerCase().includes(searchTerm) ||
       reg.regNum.toLowerCase().includes(searchTerm) ||
       (reg.group && reg.group.toLowerCase().includes(searchTerm))
-    )
-  })
+    );
+  });
 
-  // Function to download the PDF
   const downloadPDF = () => {
-    setLoadingPDF(true); // Start loading
+    setLoadingPDF(true);
     
     const doc = new jsPDF();
-  
-    // Function to add the title to the top center of the page
+    
     const addTitle = () => {
       doc.setFontSize(20);
       const title = selectedEvent || "Event";
-      const titleWidth = doc.getTextWidth(title); // Get the width of the title
-      const centerX = (doc.internal.pageSize.width - titleWidth) / 2; // Calculate the X position to center the title
-      doc.text(title, centerX, 20); // Place title at the calculated position
+      const titleWidth = doc.getTextWidth(title);
+      const centerX = (doc.internal.pageSize.width - titleWidth) / 2;
+      doc.text(title, centerX, 20);
     };
-  
-    // Add the title on the first page
+    
     addTitle();
-  
-    // Add table header
+    
     const tableColumn = ["Registration Number", "Name", "Department", "Roll Number", "Group"];
-    const tableRows = [];
-  
-    // Prepare data rows
-    filteredBySearch.forEach((reg) => {
-      const row = [
-        reg.regNum,
-        reg.name,
-        reg.department,
-        reg.rollNo,
-        reg.group || "-", // Fallback to '-' if the group is empty
-      ];
-      tableRows.push(row);
-    });
-  
-    // Add table to the PDF
+    const tableRows = filteredBySearch.map((reg) => [
+      reg.regNum,
+      reg.name,
+      reg.department,
+      reg.rollNo,
+      reg.group || "-",
+    ]);
+    
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
-      startY: 30, // Start below the title
+      startY: 30,
     });
-  
-    // Save the generated PDF
-    doc.save(`${selectedEvent || "Event"}.pdf`); // Name the PDF with the event name
     
-    setLoadingPDF(false); // Stop loading once the PDF is saved
+    doc.save(`${selectedEvent || "Event"}.pdf`);
+    setLoadingPDF(false);
   };
 
   return (
@@ -199,111 +285,25 @@ const Admin = () => {
               )}
             </div>
 
-            {/* Add the Download PDF button */}
             <div className="flex justify-end">
-  <button
-    onClick={downloadPDF}
-    className="px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all duration-200"
-    disabled={loadingPDF} // Disable the button during loading
-  >
-    {loadingPDF ? (
-      <Loader2 className="h-5 w-5 text-white animate-spin" />
-    ) : (
-      "Download PDF"
-    )}
-  </button>
-</div>
-
+              <DownloadButton
+                onClick={downloadPDF}
+                isLoading={loadingPDF}
+                disabled={!selectedEvent || filteredBySearch.length === 0}
+              />
+            </div>
 
             <AnimatePresence mode="wait">
               {isLoading ? (
-                <motion.div
-                  key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-12 space-y-4"
-                >
-                  <Loader2 className="h-12 w-12 text-pink-500 animate-spin" />
-                  <p className="text-gray-300">Loading participants...</p>
-                </motion.div>
+                <LoadingState message="Loading participants..." />
               ) : error ? (
-                <motion.div
-                  key="error"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-12 space-y-4"
-                >
-                  <AlertCircle className="h-12 w-12 text-red-500" />
-                  <p className="text-gray-300">{error}</p>
-                </motion.div>
+                <ErrorState message={error} />
               ) : selectedEvent && filteredBySearch.length > 0 ? (
-                <motion.div
-                  key="table"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative overflow-x-auto rounded-lg"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 text-gray-300">
-                      <span>{filteredBySearch.length} participants</span>
-                    </div>
-                  </div>
-
-                  <table className="w-full text-left">
-                    <thead className="bg-gradient-to-r from-pink-500 to-violet-500 text-white">
-                      <tr>
-                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Registration Number</th>
-                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Name</th>
-                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Department</th>
-                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Roll Number</th>
-                        <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Group</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/10">
-                      {filteredBySearch.map((reg, index) => (
-                        <motion.tr
-                          key={index}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05, duration: 0.2 }}
-                          className="bg-white/5 hover:bg-white/10 transition-colors duration-200"
-                        >
-                          <td className="px-6 py-4 text-sm text-gray-300">{reg.regNum}</td>
-                          <td className="px-6 py-4 text-sm text-gray-300">{reg.name}</td>
-                          <td className="px-6 py-4 text-sm text-gray-300">{reg.department}</td>
-                          <td className="px-6 py-4 text-sm text-gray-300">{reg.rollNo}</td>
-                          <td className="px-6 py-4 text-sm text-gray-300">{reg.group || '-'}</td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </motion.div>
+                <ParticipantsTable participants={filteredBySearch} />
               ) : selectedEvent ? (
-                <motion.div
-                  key="empty"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-12 space-y-4"
-                >
-                  <Users className="h-12 w-12 text-gray-400" />
-                  <p className="text-gray-300">No registrations found for this event.</p>
-                </motion.div>
+                <EmptyState message="No registrations found for this event." />
               ) : (
-                <motion.div
-                  key="select"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-12 space-y-4"
-                >
-                  <Users className="h-12 w-12 text-gray-400" />
-                  <p className="text-gray-300">Please select an event to view registrations.</p>
-                </motion.div>
+                <EmptyState message="Please select an event to view registrations." />
               )}
             </AnimatePresence>
           </div>
@@ -311,7 +311,7 @@ const Admin = () => {
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Admin
+export default Admin;
