@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import { Download, Share2 } from 'lucide-react';
@@ -10,6 +10,7 @@ import Congrats from '../assets/cngrts.png';
 import Background from '../assets/onstage.jpg';
 
 const ResultCard = ({ item, type, first, second, third, index }) => {
+  const [loading, setLoading] = useState(false); // State for loading indicator
   const posterRef = useRef(null);
 
   const calculateFontSize = (count) => {
@@ -87,7 +88,6 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
     }
     return null;
   };
-  
 
   const getPosterHeight = () => {
     const totalWinners = (first.length || 0) + (second.length || 0) + (third.length || 0);
@@ -102,28 +102,42 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
   };
 
   const downloadPoster = () => {
-    html2canvas(posterRef.current, { 
-      scale: 5, // Increases the resolution of the canvas (default is 1, try 2 for better quality)
-      useCORS: true, // Enables cross-origin resource sharing for better image quality
-      logging: false, // Turn off logging to improve performance
+    setLoading(true); // Show loading spinner
+
+    const timeout = setTimeout(() => {
+      setLoading(false); // Hide loading spinner after timeout
+      alert('This is taking longer than expected, please try again later!');
+    }, 10000); // Timeout after 10 seconds
+
+    html2canvas(posterRef.current, {
+      scale: 5, // High resolution
+      useCORS: true, // Handles cross-origin image loading better
+      logging: false,
     }).then((canvas) => {
+      clearTimeout(timeout); // Clear timeout once canvas is ready
+
       const imgData = canvas.toDataURL('image/jpeg', 1.0); // Maximum quality (1.0)
       const link = document.createElement('a');
       link.href = imgData;
       link.download = `${item}-poster.jpg`;
       link.click();
+      setLoading(false); // Hide loading spinner once download is done
+    }).catch((error) => {
+      clearTimeout(timeout); // Clear timeout on error
+      setLoading(false); // Hide loading spinner on error
+      console.error("Error generating the poster:", error);
     });
   };
-  
+
   const sharePoster = () => {
-    html2canvas(posterRef.current, { 
+    html2canvas(posterRef.current, {
       scale: 5, // High resolution
       useCORS: true, // Handles cross-origin image loading better
-      logging: false, 
+      logging: false,
     }).then((canvas) => {
       canvas.toBlob((blob) => {
         const file = new File([blob], `${item}-poster.jpg`, { type: 'image/jpeg' });
-  
+
         // Check if Web Share API is supported
         if (navigator.share) {
           navigator.share({
@@ -141,7 +155,6 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
       }, 'image/jpeg');
     });
   };
-  
 
   return (
     <motion.div
@@ -175,7 +188,14 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
         </div>
       </div>
 
-      {/* Enhanced buttons */}
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-900 z-10">
+          <div className="animate-spin rounded-full border-t-4 border-blue-500 w-16 h-16"></div>
+        </div>
+      )}
+
+      {/* Buttons */}
       <div className="mt-4 flex space-x-4 justify-center">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -201,4 +221,3 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
 };
 
 export default React.memo(ResultCard);
-
