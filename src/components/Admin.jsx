@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Search, ChevronDown, Loader2, Users, AlertCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { jsPDF } from "jspdf";
+import "jspdf-autotable"; // Import the autoTable plugin
+
 import Footer from './Footer'
 
-const RegisteredList = () => {
+const Admin = () => {
   const [events, setEvents] = useState([])
   const [registrations, setRegistrations] = useState([])
   const [selectedEvent, setSelectedEvent] = useState("")
@@ -82,6 +85,50 @@ const RegisteredList = () => {
     )
   })
 
+  // Function to download the PDF
+  const downloadPDF = () => {
+    const doc = new jsPDF()
+
+    // Function to add the title to the top center of the page
+    const addTitle = () => {
+        doc.setFontSize(20)
+        const title = selectedEvent || "Event"
+        const titleWidth = doc.getTextWidth(title) // Get the width of the title
+        const centerX = (doc.internal.pageSize.width - titleWidth) / 2 // Calculate the X position to center the title
+        doc.text(title, centerX, 20) // Place title at the calculated position
+    }
+
+    // Add the title on the first page
+    addTitle()
+
+    // Add table header
+    const tableColumn = ["Registration Number", "Name", "Department", "Roll Number", "Group"]
+    const tableRows = []
+
+    // Prepare data rows
+    filteredBySearch.forEach((reg) => {
+      const row = [
+        reg.regNum,
+        reg.name,
+        reg.department,
+        reg.rollNo,
+        reg.group || "-", // Fallback to '-' if the group is empty
+      ]
+      tableRows.push(row)
+    })
+
+    // Add table to the PDF
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30, // Start below the title
+    })
+    // Save the generated PDF
+    doc.save(`${selectedEvent || "Event"}.pdf`) // Name the PDF with the event name
+}
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-10"></div>
@@ -145,6 +192,16 @@ const RegisteredList = () => {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Add the Download PDF button */}
+            <div className="flex justify-end">
+              <button
+                onClick={downloadPDF}
+                className="px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all duration-200"
+              >
+                Download PDF
+              </button>
             </div>
 
             <AnimatePresence mode="wait">
@@ -243,9 +300,7 @@ const RegisteredList = () => {
       </div>
       <Footer />
     </div>
-    
-    
   )
 }
 
-export default RegisteredList;
+export default Admin

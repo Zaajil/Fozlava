@@ -170,7 +170,7 @@ const OffStageRegistration = () => {
   const todaysEventsList = getTodaysEvents();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-x-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -186,8 +186,8 @@ const OffStageRegistration = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
+            transition={{ duration: 0.4 }}
+            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl will-change-transform"
           >
             <div className="bg-gradient-to-r from-pink-500 to-violet-500 p-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
@@ -222,8 +222,8 @@ const OffStageRegistration = () => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
+            transition={{ duration: 0.4 }}
+            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl will-change-transform"
           >
             <div className="bg-gradient-to-r from-violet-500 to-pink-500 p-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">

@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import EventResults from "./pages/EventResults";
 import OffStageRegistration from "./pages/OffStageRegistration";
 import RegisteredList from "./components/RegisteredList";
+import Admin from "./components/Admin";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/results" element={<EventResults />} />
             <Route path="/register" element={<OffStageRegistration />} />
             <Route path="/registered-list" element={<RegisteredList />} />
+            <Route path="/registered-list/admin" element={<Admin />} />
           </Routes>
         </main>
 
