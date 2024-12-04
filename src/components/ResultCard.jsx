@@ -102,27 +102,46 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
   };
 
   const downloadPoster = () => {
-    html2canvas(posterRef.current).then((canvas) => {
-      const imgData = canvas.toDataURL('image/jpeg');
+    html2canvas(posterRef.current, { 
+      scale: 5, // Increases the resolution of the canvas (default is 1, try 2 for better quality)
+      useCORS: true, // Enables cross-origin resource sharing for better image quality
+      logging: false, // Turn off logging to improve performance
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/jpeg', 1.0); // Maximum quality (1.0)
       const link = document.createElement('a');
       link.href = imgData;
       link.download = `${item}-poster.jpg`;
       link.click();
     });
   };
-
+  
   const sharePoster = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: `${item} Poster`,
-        text: `Check out the results for ${item}`,
-        url: window.location.href,
-      }).catch(console.error);
-    } else {
-      const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(`Check out the results for ${item}`)}`;
-      window.open(shareUrl, '_blank');
-    }
+    html2canvas(posterRef.current, { 
+      scale: 5, // High resolution
+      useCORS: true, // Handles cross-origin image loading better
+      logging: false, 
+    }).then((canvas) => {
+      canvas.toBlob((blob) => {
+        const file = new File([blob], `${item}-poster.jpg`, { type: 'image/jpeg' });
+  
+        // Check if Web Share API is supported
+        if (navigator.share) {
+          navigator.share({
+            title: `${item} Poster`,
+            text: `Check out the results for ${item}`,
+            files: [file], // Share the file directly
+          }).catch(console.error);
+        } else {
+          // Fallback: Create a download link and open the share dialog
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(file);
+          link.download = `${item}-poster.jpg`;
+          link.click();
+        }
+      }, 'image/jpeg');
+    });
   };
+  
 
   return (
     <motion.div
@@ -134,7 +153,7 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
       <div className="relative w-full flex justify-center items-center">
         <div
           ref={posterRef}
-          className={`w-full max-w-[320px] sm:max-w-[400px] p-4 rounded-xl shadow-xl transform scale-95 group-hover:scale-100 transition-transform duration-300 bg-cover bg-center ${getPosterHeight()}`}
+          className={`w-full max-w-[320px] sm:max-w-[400px] p-4  shadow-xl transform scale-95 group-hover:scale-100 transition-transform duration-300 bg-cover bg-center ${getPosterHeight()}`}
           style={{
             backgroundImage: `url(${Background})`,
           }}
