@@ -133,9 +133,6 @@ const Admin = () => {
     
     setLoadingPDF(false); // Stop loading once the PDF is saved
   };
-  
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -204,18 +201,19 @@ const Admin = () => {
 
             {/* Add the Download PDF button */}
             <div className="flex justify-end">
-              <button
-                onClick={downloadPDF}
-                className="px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all duration-200"
-                disabled={loadingPDF}
-              >
-                {loadingPDF ? (
+  <button
+    onClick={downloadPDF}
+    className="px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all duration-200"
+    disabled={loadingPDF} // Disable the button during loading
+  >
+    {loadingPDF ? (
       <Loader2 className="h-5 w-5 text-white animate-spin" />
     ) : (
       "Download PDF"
     )}
   </button>
 </div>
+
 
             <AnimatePresence mode="wait">
               {isLoading ? (
