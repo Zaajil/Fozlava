@@ -7,6 +7,7 @@ import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
 import { useEventResults, useFilteredResults } from '../ui/useEventResults';
 import Footer from '../components/Footer';
+import '../index.css'
 
 function EventResults() {
   const [searchTerm, setSearchTerm] = useState("");

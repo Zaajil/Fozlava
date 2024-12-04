@@ -5,6 +5,7 @@ import { Loader2, Trophy, Users } from "lucide-react";
 import Footer from "../components/Footer";
 import TeamCard from "../components/TeamCard";
 import DepartmentList from "../components/DepartmentList";
+import '../index.css'
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -105,16 +106,22 @@ const HomePage = () => {
               <Loader2 className="w-12 h-12 animate-spin text-purple-500" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {pointsTable.map((team, index) => (
-                <TeamCard
-                  key={team.team}
-                  team={team}
-                  index={index}
-                  color={getTeamColor(index)}
-                />
-              ))}
-            </div>
+            <motion.div
+  layout
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ type: "spring", stiffness: 100, damping: 25 }}
+  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+>
+  {pointsTable.map((team, index) => (
+    <TeamCard
+      key={team.team}
+      team={team}
+      index={index}
+      color={getTeamColor(index)}
+    />
+  ))}
+</motion.div>
           )}
 
           <motion.div

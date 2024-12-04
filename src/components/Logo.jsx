@@ -16,10 +16,10 @@ const Logo = React.memo(({ onClick, isMobile }) => {
       <motion.div
         initial={{ rotate: 0 }}
         animate={{ rotate: 360 }}
-        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-        className="relative"
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="relative w-8 h-8"
       >
-        <div className="absolute inset-0 bg-purple-500 blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
+        
       </motion.div>
       <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
         FOZLAVA
@@ -29,3 +29,4 @@ const Logo = React.memo(({ onClick, isMobile }) => {
 });
 
 export default Logo;
+

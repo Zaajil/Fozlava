@@ -15,3 +15,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+button:hover {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+

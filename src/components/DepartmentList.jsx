@@ -1,7 +1,9 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { Users, ChevronUp, ChevronDown, Star } from 'lucide-react';
+import '../index.css'
 
-const DepartmentList = ({ departments, expandedTeam, toggleTeam, getTeamColor }) => {
+const DepartmentList = React.memo(({ departments, expandedTeam, toggleTeam, getTeamColor }) => {
   return (
     <div className="space-y-4">
       {Object.keys(departments).map((teamKey, index) => (
@@ -27,13 +29,13 @@ const DepartmentList = ({ departments, expandedTeam, toggleTeam, getTeamColor })
               <ChevronDown className="w-6 h-6 text-gray-400" />
             )}
           </button>
-          <AnimatePresence>
             {expandedTeam === teamKey && (
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={{ opacity: 0, scaleY: 0 }}
+                animate={{ opacity: 1, scaleY: 1 }}
+                exit={{ opacity: 0, scaleY: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                style={{ transformOrigin: "top" }}
                 className="px-6 pb-6"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -49,11 +51,10 @@ const DepartmentList = ({ departments, expandedTeam, toggleTeam, getTeamColor })
                 </div>
               </motion.div>
             )}
-          </AnimatePresence>
         </div>
       ))}
     </div>
   );
-};
+});
 
 export default DepartmentList;
