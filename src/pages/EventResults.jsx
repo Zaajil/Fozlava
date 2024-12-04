@@ -21,6 +21,29 @@ function EventResults() {
   const { results, loading, error } = useEventResults();
   const filteredResults = useFilteredResults(results, searchTerm, selectedCategory);
 
+  const calculateTotalWinners = (result) => {
+    const { first = [], second = [], third = [], type } = result;
+
+    const countValidEntries = (entries) => {
+      if (type === 'individual') {
+        return entries.filter((entry) => entry.name && entry.name.trim() !== '').length;
+      }
+      if (type === 'group') {
+        return entries.filter((entry) => typeof entry === 'string' && entry.trim() !== '').length;
+      }
+      return 0;
+    };
+
+    return countValidEntries(first) + countValidEntries(second) + countValidEntries(third);
+  };
+
+  // Sort filtered results by poster size (ascending)
+  const sortedResults = filteredResults.sort(
+    (a, b) => calculateTotalWinners(a) - calculateTotalWinners(b)
+  );
+
+  const resultsToDisplay = sortedResults.slice(0, visibleResults);
+
   const handleSearchChange = useCallback((value) => {
     setSearchTerm(value);
     setVisibleResults(12);
@@ -37,7 +60,6 @@ function EventResults() {
     }
   }, [inView]);
 
-  const resultsToDisplay = filteredResults.slice(0, visibleResults);
 
   return (
     <div>

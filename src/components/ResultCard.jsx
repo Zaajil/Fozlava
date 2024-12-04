@@ -13,11 +13,15 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
   const [loading, setLoading] = useState(false); // State for loading indicator
   const posterRef = useRef(null);
 
-  const calculateFontSize = (count) => {
-    if (count <= 2) return 'text-base sm:text-lg';
-    if (count <= 4) return 'text-sm sm:text-md';
-    return 'text-xs sm:text-sm';
+  const calculateFontSize = (totalWinners) => {
+    if (totalWinners <= 3) return 'text-lg sm:text-xl'; // Standard size
+    if (totalWinners <= 6) return 'text-md sm:text-lg'; // Slightly smaller
+    if (totalWinners <= 9) return 'text-sm sm:text-md'; // Smaller
+    if (totalWinners <= 12) return 'text-xs sm:text-sm'; // Even smaller
+    return 'text-[10px] sm:text-xs'; // Smallest, for 13+ winners
   };
+  
+
 
   const renderWinner = (winner, fontSize) => (
     <div className={`flex items-center ${fontSize}`}>
@@ -90,16 +94,36 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
   };
 
   const getPosterHeight = () => {
-    const totalWinners = (first.length || 0) + (second.length || 0) + (third.length || 0);
-
+    // Helper function to filter valid winners
+    const getValidWinnerCount = (winnerArray) => {
+      if (type === 'individual') {
+        return winnerArray.filter(winner => winner.name && winner.name.trim() !== '').length;
+      } else if (type === 'group') {
+        return winnerArray.filter(group => typeof group === 'string' && group.trim() !== '').length;
+      }
+      return 0;
+    };
+  
+    // Calculate valid winners for each position
+    const firstCount = Array.isArray(first) ? getValidWinnerCount(first) : 0;
+    const secondCount = Array.isArray(second) ? getValidWinnerCount(second) : 0;
+    const thirdCount = Array.isArray(third) ? getValidWinnerCount(third) : 0;
+  
+    const totalWinners = firstCount + secondCount + thirdCount;
+    console.log("Total Winners:", totalWinners);
+  
+    // Adjust poster height based on total winners
     if (totalWinners <= 3) {
       return 'h-[400px] sm:h-[500px]';
-    } else if (totalWinners <= 6) {
-      return 'h-[400px] sm:h-[500px]';
+    } else if (totalWinners <= 5) {
+      return 'h-[430px] sm:h-[550px]';
+    } else if (totalWinners <= 9) {
+      return 'h-[600px] sm:h-[700px]';
     } else {
-      return 'h-[450px] sm:h-[550px]';
+      return 'h-[750px] sm:h-[850px]';
     }
   };
+  
 
   const downloadPoster = () => {
     setLoading(true); // Show loading spinner
