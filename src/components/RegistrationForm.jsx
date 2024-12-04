@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { User, Briefcase, Phone, Hash, Sparkles } from 'lucide-react';
 import FormInput from './FormInput';
@@ -146,4 +147,5 @@ const RegistrationForm = ({
   );
 };
 
-export default RegistrationForm;
+export default React.memo(RegistrationForm);
+

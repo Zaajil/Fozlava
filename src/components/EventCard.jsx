@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 
@@ -28,4 +29,4 @@ const EventCard = ({ event, index }) => {
   );
 };
 
-export default EventCard;
+export default React.memo(EventCard);

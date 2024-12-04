@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, Trophy, Users } from "lucide-react";
+import { Loader2, Trophy, Users } from 'lucide-react';
 import Footer from "../components/Footer";
 import TeamCard from "../components/TeamCard";
 import DepartmentList from "../components/DepartmentList";
@@ -79,49 +79,49 @@ const HomePage = () => {
 
   const getTeamColor = useCallback((index) => {
     const colors = [
-      "from-yellow-400 to-orange-500",
-      "from-blue-400 to-indigo-500",
-      "from-green-400 to-emerald-500",
-      "from-purple-400 to-pink-500",
+      "from-emerald-400 to-teal-500",
+      "from-amber-400 to-orange-500",
+      "from-sky-400 to-blue-500",
+      "from-rose-400 to-red-500",
     ];
     return colors[index] || colors[0];
   }, []);
 
   return (
     <div>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-center mb-16"
           >
-            <h1 className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+            <h1 className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-600 mb-4">
               FOZLAVA
             </h1>
           </motion.div>
 
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader2 className="w-12 h-12 animate-spin text-purple-500" />
+              <Loader2 className="w-12 h-12 animate-spin text-emerald-500" />
             </div>
           ) : (
             <motion.div
-  layout
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ type: "spring", stiffness: 100, damping: 25 }}
-  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
->
-  {pointsTable.map((team, index) => (
-    <TeamCard
-      key={team.team}
-      team={team}
-      index={index}
-      color={getTeamColor(index)}
-    />
-  ))}
-</motion.div>
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 25 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
+              {pointsTable.map((team, index) => (
+                <TeamCard
+                  key={team.team}
+                  team={team}
+                  index={index}
+                  color={getTeamColor(index)}
+                />
+              ))}
+            </motion.div>
           )}
 
           <motion.div
@@ -134,7 +134,7 @@ const HomePage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
                 onClick={() => navigate("/register")}
               >
                 <Users className="w-5 h-5" />
@@ -143,7 +143,7 @@ const HomePage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
                 onClick={() => navigate("/results")}
               >
                 <Trophy className="w-5 h-5" />
@@ -156,11 +156,8 @@ const HomePage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-24"
+            className="mt-4"
           >
-            <h2 className="text-3xl font-bold text-center text-white mb-12">
-              Team Departments
-            </h2>
             <DepartmentList
               departments={departments}
               expandedTeam={expandedTeam}
@@ -176,3 +173,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

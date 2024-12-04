@@ -5,7 +5,6 @@ import { Calendar, User } from "lucide-react";
 import Footer from "../components/Footer";
 import EventCard from "../components/EventCard";
 import RegistrationForm from "../components/RegistrationForm";
-import '../index.css'
 
 const OffStageRegistration = () => {
   const navigate = useNavigate();
