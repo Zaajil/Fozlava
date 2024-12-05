@@ -5,7 +5,7 @@ import { Loader2, Trophy, Users } from 'lucide-react';
 import Footer from "../components/Footer";
 import TeamCard from "../components/TeamCard";
 import DepartmentList from "../components/DepartmentList";
-import '../index.css'
+import '../index.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -14,32 +14,9 @@ const HomePage = () => {
   const [expandedTeam, setExpandedTeam] = useState(null);
 
   const departments = {
-    teamA: [
-      "Maths",
-      "Statistics",
-      "Management Studies",
-      "Geology",
-      "History",
-      "English (Aided)",
-      "Library Science",
-    ],
-    teamB: [
-      "Physics",
-      "Chemistry",
-      "Computer Science",
-      "B.Voc IT",
-      "Malayalam",
-      "Functional English",
-      "English (SF)",
-    ],
-    teamC: [
-      "Psychology (SF)",
-      "Psychology (Aided)",
-      "Commerce",
-      "Zoology",
-      "Botany",
-      "Sociology",
-    ],
+    teamA: ["Maths", "Statistics", "Management Studies", "Geology", "History", "English (Aided)", "Library Science"],
+    teamB: ["Physics", "Chemistry", "Computer Science", "B.Voc IT", "Malayalam", "Functional English", "English (SF)"],
+    teamC: ["Psychology (SF)", "Psychology (Aided)", "Commerce", "Zoology", "Botany", "Sociology"],
     teamD: ["BCom CA", "Arabic", "Economics", "BMMC", "B.Voc Auto", "MCJ"],
   };
 
@@ -87,6 +64,11 @@ const HomePage = () => {
     return colors[index] || colors[0];
   }, []);
 
+  // Calculate the highest points
+  const highestPoints = pointsTable.length > 0
+    ? Math.max(...pointsTable.map((team) => team.totalPoints))
+    : 0;
+
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
@@ -96,9 +78,10 @@ const HomePage = () => {
             animate={{ opacity: 1 }}
             className="text-center mb-16"
           >
-            <h1 className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-600 mb-4">
-              FOZLAVA
-            </h1>
+            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-600 mb-4">
+  FOZLAVA
+</h1>
+
           </motion.div>
 
           {loading ? (
@@ -111,7 +94,7 @@ const HomePage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ type: "spring", stiffness: 100, damping: 25 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+              className="grid grid-cols-1 gap-8 justify-items-center md:grid-cols-2 lg:grid-cols-2"
             >
               {pointsTable.map((team, index) => (
                 <TeamCard
@@ -119,6 +102,7 @@ const HomePage = () => {
                   team={team}
                   index={index}
                   color={getTeamColor(index)}
+                  highestPoints={highestPoints} // Pass highestPoints
                 />
               ))}
             </motion.div>
@@ -173,4 +157,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

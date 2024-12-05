@@ -11,8 +11,8 @@ export default function DepartmentList({ departments, expandedTeam, toggleTeam, 
         animate={{ opacity: 1 }}
         className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        <h2 className="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-          Team Departments
+        <h2 className="text-4xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+          TEAM DEPARTMENTS
         </h2>
         
         <div className="grid gap-6">
