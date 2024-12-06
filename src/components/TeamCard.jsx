@@ -12,7 +12,7 @@ const TeamCard = ({ team, index, color, highestPoints }) => {
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${color} p-1`}
       layout
     >
-      <div className="bg-gray-900 rounded-xl p-6 h-full w-72 lg:w-60 ">
+      <div className="bg-gray-900 rounded-xl p-6 h-full w-72 md:w-64 lg:w-60 ">
         <div className="absolute inset-0 flex items-center right-10 mb-4 justify-end text-lightAccent text-opacity-30 font-bold text-[150px] select-none">
           {index + 1}
         </div>
