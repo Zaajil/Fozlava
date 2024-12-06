@@ -110,8 +110,7 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
     const thirdCount = Array.isArray(third) ? getValidWinnerCount(third) : 0;
   
     const totalWinners = firstCount + secondCount + thirdCount;
-    console.log("Total Winners:", totalWinners);
-  
+    
     // Adjust poster height based on total winners
     if (totalWinners <= 3) {
       return 'h-[400px] sm:h-[500px]';

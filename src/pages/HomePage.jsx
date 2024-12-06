@@ -94,7 +94,7 @@ const HomePage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ type: "spring", stiffness: 100, damping: 25 }}
-              className="grid grid-cols-1 gap-8 justify-items-center md:grid-cols-2 lg:grid-cols-2"
+              className="grid grid-cols-1 gap-8 justify-items-center md:grid-cols-2 lg:grid-cols-4"
             >
               {pointsTable.map((team, index) => (
                 <TeamCard
