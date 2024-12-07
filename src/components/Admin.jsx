@@ -81,8 +81,10 @@ const ParticipantsTable = ({ participants }) => (
           <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Registration Number</th>
           <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Name</th>
           <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Department</th>
+          <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Year</th>
           <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Roll Number</th>
           <th className="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Group</th>
+          
         </tr>
       </thead>
       <tbody className="divide-y divide-white/10">
@@ -97,8 +99,10 @@ const ParticipantsTable = ({ participants }) => (
             <td className="px-6 py-4 text-sm text-gray-300">{reg.regNum}</td>
             <td className="px-6 py-4 text-sm text-gray-300">{reg.name}</td>
             <td className="px-6 py-4 text-sm text-gray-300">{reg.department}</td>
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.year}</td>
             <td className="px-6 py-4 text-sm text-gray-300">{reg.rollNo}</td>
-            <td className="px-6 py-4 text-sm text-gray-300">{reg.group || '-'}</td>
+            <td className="px-6 py-4 text-sm text-gray-300">{reg.group}</td>
+            
           </motion.tr>
         ))}
       </tbody>
@@ -182,6 +186,7 @@ const Admin = () => {
       reg.name.toLowerCase().includes(searchTerm) ||
       reg.department.toLowerCase().includes(searchTerm) ||
       reg.regNum.toLowerCase().includes(searchTerm) ||
+      reg.year.toLowerCase().includes(searchTerm) ||
       (reg.group && reg.group.toLowerCase().includes(searchTerm))
     );
   });
@@ -201,11 +206,12 @@ const Admin = () => {
     
     addTitle();
     
-    const tableColumn = ["Registration Number", "Name", "Department", "Roll Number", "Group"];
+    const tableColumn = ["Registration Number", "Name", "Department","Year", "Roll Number", "Group"];
     const tableRows = filteredBySearch.map((reg) => [
       reg.regNum,
       reg.name,
       reg.department,
+      reg.year,
       reg.rollNo,
       reg.group || "-",
     ]);
