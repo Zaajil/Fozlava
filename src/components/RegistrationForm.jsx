@@ -10,6 +10,7 @@ const RegistrationForm = ({
   registrationNumber,
   todayEvents,
   handleChange,
+  duplicateMessage,
   handleSubmit,
   handleViewRegistrations
 }) => {
@@ -103,36 +104,51 @@ const RegistrationForm = ({
       </FormInput>
 
       <motion.button
-        type="submit"
-        className="w-full bg-gradient-to-r from-pink-500 to-violet-500 text-white py-3 rounded-lg font-medium hover:from-pink-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
-        disabled={isLoading}
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-      >
-        {isLoading ? (
-          <div className="flex justify-center items-center">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-          </div>
-        ) : (
-          "Register Now"
-        )}
-      </motion.button>
+  type="submit"
+  className="w-full bg-gradient-to-r from-pink-500 to-violet-500 text-white py-3 rounded-lg font-medium hover:from-pink-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
+  disabled={isLoading}
+  whileHover={{ scale: 1.01 }}
+  whileTap={{ scale: 0.99 }}
+>
+  {isLoading ? (
+    <div className="flex justify-center items-center">
+      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+    </div>
+  ) : (
+    "Register Now"
+  )}
+</motion.button>
 
-      {registrationNumber && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg p-4"
-        >
-          <div className="flex items-center gap-2 text-emerald-400 font-medium mb-1">
-            <Sparkles className="w-5 h-5" />
-            <span>Registration Successful!</span>
-          </div>
-          <p className="text-white">
-            Your Registration Number: <span className="font-mono font-bold">{registrationNumber}</span>
-          </p>
-        </motion.div>
-      )}
+{/* Conditional rendering for duplicate or successful registration */}
+{duplicateMessage ? (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="mt-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg p-4"
+  >
+    <div className="flex items-center gap-2 text-emerald-400 font-medium mb-1">
+      <Sparkles className="w-5 h-5" />
+      <span>You are already Registered!</span>
+    </div>
+    <p className="text-white">
+      Your Registration Number: <span className="font-mono font-bold">{duplicateMessage}</span>
+    </p>
+  </motion.div>
+) : registrationNumber && !duplicateMessage ? (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="mt-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg p-4"
+  >
+    <div className="flex items-center gap-2 text-emerald-400 font-medium mb-1">
+      <Sparkles className="w-5 h-5" />
+      <span>Registration Successful!</span>
+    </div>
+    <p className="text-white">
+      Your Registration Number: <span className="font-mono font-bold">{registrationNumber}</span>
+    </p>
+  </motion.div>
+) : null}
 
       <motion.button
         type="button"
@@ -148,4 +164,3 @@ const RegistrationForm = ({
 };
 
 export default React.memo(RegistrationForm);
-

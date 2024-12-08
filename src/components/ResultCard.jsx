@@ -22,9 +22,9 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
   };
 
   const renderWinner = (winner, fontSize) => (
-    <div className={`flex items-center ${fontSize}`}>
+    <div className={`flex items-center ${fontSize}`} style={{ minHeight: '2.5rem', lineHeight: '1.2' }}>
       {type === 'individual' ? (
-        <div className="flex flex-col items-start ">
+        <div className="flex flex-col items-start">
           <p className="font-medium text-black dark:text-black">{winner.name}</p>
           {winner.department && winner.year && (
             <p className="text-xs sm:text-sm text-black dark:text-black">
@@ -50,10 +50,12 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
         return (
           <div className="flex items-start relative left-8 space-x-2 sm:space-x-4 mb-2 sm:mb-4">
             <img src={badgeSrc} alt={`${position} Badge`} className="w-6 sm:w-8 h-auto" />
-            <div className={`flex flex-col ${calculateFontSize(validWinners.length)}`}
-            style={{ minHeight: '2.5rem', // Fixed height to avoid layout shifts
-              lineHeight: '1.5',   // Ensure consistent line height
-            }}
+            <div 
+              className={`flex flex-col ${calculateFontSize(validWinners.length)}`}
+              style={{ 
+                minHeight: `${validWinners.length * 2.5}rem`,
+                lineHeight: '1.2'
+              }}
             >
               {validWinners.map((winner, idx) => (
                 <motion.div
@@ -75,10 +77,12 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
         return (
           <div className="flex justify-center items-center space-x-2 sm:space-x-4 mb-2 sm:mb-4">
             <img src={badgeSrc} alt={`${position} Badge`} className="w-6 sm:w-8 h-auto" />
-            <div className={`flex flex-col ${calculateFontSize(validGroup.length)}`}
-            style={{ minHeight: '2.5rem', // Fixed height to avoid layout shifts
-              lineHeight: '1.5',   // Ensure consistent line height
-            }}
+            <div 
+              className={`flex flex-col ${calculateFontSize(validGroup.length)}`}
+              style={{ 
+                minHeight: `${validGroup.length * 2.5}rem`,
+                lineHeight: '1.2'
+              }}
             >
               {validGroup.map((group, idx) => (
                 <motion.div
@@ -146,6 +150,12 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
           if (clonedPoster) {
             clonedPoster.style.transform = 'none';
           }
+
+          // Apply consistent styling to winner elements
+          clonedDoc.querySelectorAll('.flex.items-center').forEach((el) => {
+            el.style.minHeight = '2.5rem';
+            el.style.lineHeight = '1.2';
+          });
         },
       });
   
@@ -174,6 +184,11 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
           if (clonedPoster) {
             clonedPoster.style.transform = 'none';
           }
+          // Apply consistent styling to winner elements
+          clonedDoc.querySelectorAll('.flex.items-center').forEach((el) => {
+            el.style.minHeight = '2.5rem';
+            el.style.lineHeight = '1.2';
+          });
         }
       });
       canvas.toBlob((blob) => {

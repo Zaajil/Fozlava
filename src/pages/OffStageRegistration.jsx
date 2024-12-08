@@ -23,6 +23,7 @@ const OffStageRegistration = () => {
   const [todayEvents, setTodayEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [duplicateMessage, setDuplicateMessage] = useState('');
 
   const fetchRegistrationData = useCallback(async () => {
     try {
@@ -98,7 +99,6 @@ const OffStageRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const selectedEvent = todayEvents.find(
       (event) => event.event === formData.event
     );
@@ -113,7 +113,6 @@ const OffStageRegistration = () => {
       return;
     }
   
-
     const errors = {};
     if (!formData.name) errors.name = "Name is required.";
     if (!formData.event) errors.event = "Event is required.";
@@ -124,17 +123,56 @@ const OffStageRegistration = () => {
     if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
       errors.phone = "Phone number must be exactly 10 digits.";
     }
-
+  
     setErrors(errors);
+    setDuplicateMessage('');
     if (Object.keys(errors).length > 0) return;
-
+  
+    // Fetch the latest registrations to ensure data is up-to-date
+    try {
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbzxzB61OITDNFIdKpk_eYKUbz59p-504uIukXZT7qOw2yuD55YldAmTfmmdGpVM6HM/exec"
+      );
+      const fetchedRegistrations = await response.json();
+      
+      const normalizedEvent = formData.event.trim().toLowerCase();
+      const normalizedDepartment = formData.department.trim().toLowerCase();
+      const normalizedYear = formData.year.trim().toLowerCase();
+      const normalizedRollNo = formData.rollNo.trim().toLowerCase();
+      
+      // Check for duplicate entry in fetched data based on rollNo, event, department, and year
+      const existingRegistration = fetchedRegistrations.find((registration) => {
+        // Ensure rollNo is treated as a string
+        const regEvent = registration.event.trim().toLowerCase();
+        const regDepartment = registration.department.trim().toLowerCase();
+        const regYear = registration.year.trim().toLowerCase();
+        const regRollNo = String(registration.rollNo).trim().toLowerCase(); // Convert to string
+      
+        return (
+          regEvent === normalizedEvent &&
+          regDepartment === normalizedDepartment &&
+          regYear === normalizedYear &&
+          regRollNo === normalizedRollNo
+        );
+      });
+      
+      if (existingRegistration) {
+        setDuplicateMessage(existingRegistration.regNum);
+        return;
+      }
+     } catch (error) {
+      console.error("Error fetching registrations:", error);
+      return;
+    }
+  
+    // Proceed with form submission
     setIsLoading(true);
-
+  
     const formDataObj = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       formDataObj.append(key, value);
     });
-
+  
     try {
       const response = await fetch(
         "https://script.google.com/macros/s/AKfycbzxzB61OITDNFIdKpk_eYKUbz59p-504uIukXZT7qOw2yuD55YldAmTfmmdGpVM6HM/exec",
@@ -146,7 +184,7 @@ const OffStageRegistration = () => {
       const data = await response.json();
       if (data.status === "success") {
         setRegistrationNumber(data.regNum);
-        fetchRegistrationData();
+        fetchRegistrationData(); // Refresh registrations list
         setFormData({
           event: "",
           name: "",
@@ -162,6 +200,7 @@ const OffStageRegistration = () => {
       setIsLoading(false);
     }
   };
+  
 
   const handleViewRegistrations = () => {
     navigate("/registered-list", {
@@ -244,6 +283,7 @@ const OffStageRegistration = () => {
                 todayEvents={todaysEventsList}
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
+                duplicateMessage={duplicateMessage}
                 handleViewRegistrations={handleViewRegistrations}
               />
             </div>
