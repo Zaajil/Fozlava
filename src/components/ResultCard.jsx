@@ -124,33 +124,32 @@ const ResultCard = ({ item, type, first, second, third, index }) => {
   };
   
 
-  const downloadPoster = () => {
+  const downloadPoster = async () => {
+  try {
     setLoading(true); // Show loading spinner
 
-    const timeout = setTimeout(() => {
-      setLoading(false); // Hide loading spinner after timeout
-      alert('This is taking longer than expected, please try again later!');
-    }, 10000); // Timeout after 10 seconds
-
-    html2canvas(posterRef.current, {
+    // Generate the canvas
+    const canvas = await html2canvas(posterRef.current, {
       scale: 5, // High resolution
       useCORS: true, // Handles cross-origin image loading better
       logging: false,
-    }).then((canvas) => {
-      clearTimeout(timeout); // Clear timeout once canvas is ready
-
-      const imgData = canvas.toDataURL('image/jpeg', 1.0); // Maximum quality (1.0)
-      const link = document.createElement('a');
-      link.href = imgData;
-      link.download = `${item}-poster.jpg`;
-      link.click();
-      setLoading(false); // Hide loading spinner once download is done
-    }).catch((error) => {
-      clearTimeout(timeout); // Clear timeout on error
-      setLoading(false); // Hide loading spinner on error
-      console.error("Error generating the poster:", error);
     });
-  };
+
+    // Convert the canvas to a downloadable image
+    const imgData = canvas.toDataURL('image/jpeg', 1.0); // Maximum quality (1.0)
+    const link = document.createElement('a');
+    link.href = imgData;
+    link.download = `${item}-poster.jpg`;
+
+    // Simulate a user click to trigger the download
+    link.click();
+  } catch (error) {
+    console.error("Error generating the poster:", error);
+    alert("An error occurred while downloading the poster. Please try again.");
+  } finally {
+    setLoading(false); // Hide loading spinner
+  }
+};
 
   const sharePoster = () => {
     html2canvas(posterRef.current, {
