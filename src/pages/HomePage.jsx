@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import TeamCard from "../components/TeamCard";
 import DepartmentList from "../components/DepartmentList";
 import '../index.css';
+import SponsorCard from '../components/SponsorCard';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -150,6 +151,7 @@ const HomePage = () => {
             />
           </motion.div>
         </div>
+        <SponsorCard />
       </div>
       <Footer />
     </div>

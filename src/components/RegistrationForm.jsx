@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { User, Briefcase, Phone, Hash, Sparkles } from 'lucide-react';
 import FormInput from './FormInput';
+import SponsorCard from "../components/SponsorCard";
 
 const RegistrationForm = ({
   formData,
@@ -131,6 +132,7 @@ const RegistrationForm = ({
           <p className="text-white">
             Your Registration Number: <span className="font-mono font-bold">{registrationNumber}</span>
           </p>
+          <SponsorCard/>
         </motion.div>
       )}
 

@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import EventCard from "../components/EventCard";
 import RegistrationForm from "../components/RegistrationForm";
 
+
 const OffStageRegistration = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
