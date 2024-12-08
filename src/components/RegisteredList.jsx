@@ -84,7 +84,7 @@ const RegisteredList = () => {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
       <div className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-10"></div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -94,7 +94,7 @@ const RegisteredList = () => {
           transition={{ duration: 0.2 }}
           className="text-center mb-12 will-change-transform"
         >
-          <h1 className="text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+          <h1 className="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-600">
             Registered Participants
           </h1>
         </motion.div>

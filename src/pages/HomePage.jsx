@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, Trophy, Users } from 'lucide-react';
+import { Loader2, Trophy, Users } from "lucide-react";
 import Footer from "../components/Footer";
 import TeamCard from "../components/TeamCard";
 import DepartmentList from "../components/DepartmentList";
-import '../index.css';
-import SponsorCard from '../components/SponsorCard';
+import "../index.css";
+
+import Navbar from "../components/Navbar";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -15,9 +16,32 @@ const HomePage = () => {
   const [expandedTeam, setExpandedTeam] = useState(null);
 
   const departments = {
-    teamA: ["Maths", "Statistics", "Management Studies", "Geology", "History", "English (Aided)", "Library Science"],
-    teamB: ["Physics", "Chemistry", "Computer Science", "B.Voc IT", "Malayalam", "Functional English", "English (SF)"],
-    teamC: ["Psychology (SF)", "Psychology (Aided)", "Commerce", "Zoology", "Botany", "Sociology"],
+    teamA: [
+      "Maths",
+      "Statistics",
+      "Management Studies",
+      "Geology",
+      "History",
+      "English (Aided)",
+      "Library Science",
+    ],
+    teamB: [
+      "Physics",
+      "Chemistry",
+      "Computer Science",
+      "B.Voc IT",
+      "Malayalam",
+      "Functional English",
+      "English (SF)",
+    ],
+    teamC: [
+      "Psychology (SF)",
+      "Psychology (Aided)",
+      "Commerce",
+      "Zoology",
+      "Botany",
+      "Sociology",
+    ],
     teamD: ["BCom CA", "Arabic", "Economics", "BMMC", "B.Voc Auto", "MCJ"],
   };
 
@@ -65,24 +89,25 @@ const HomePage = () => {
     return colors[index] || colors[0];
   }, []);
 
-  // Calculate the highest points
-  const highestPoints = pointsTable.length > 0
-    ? Math.max(...pointsTable.map((team) => team.totalPoints))
-    : 0;
+  const highestPoints =
+    pointsTable.length > 0
+      ? Math.max(...pointsTable.map((team) => team.totalPoints))
+      : 0;
 
   return (
     <div>
+      <Navbar/>
+
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8  py-12">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-center mb-16"
           >
             <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-600 mb-4">
-  FOZLAVA
-</h1>
-
+              FOZLAVA
+            </h1>
           </motion.div>
 
           {loading ? (
@@ -103,7 +128,7 @@ const HomePage = () => {
                   team={team}
                   index={index}
                   color={getTeamColor(index)}
-                  highestPoints={highestPoints} // Pass highestPoints
+                  highestPoints={highestPoints}
                 />
               ))}
             </motion.div>
@@ -151,7 +176,6 @@ const HomePage = () => {
             />
           </motion.div>
         </div>
-        <SponsorCard />
       </div>
       <Footer />
     </div>

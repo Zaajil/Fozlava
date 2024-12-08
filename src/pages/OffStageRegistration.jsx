@@ -5,6 +5,7 @@ import { Calendar, User } from "lucide-react";
 import Footer from "../components/Footer";
 import EventCard from "../components/EventCard";
 import RegistrationForm from "../components/RegistrationForm";
+import Navbar from "../components/Navbar";
 
 
 const OffStageRegistration = () => {
@@ -171,15 +172,16 @@ const OffStageRegistration = () => {
   const todaysEventsList = getTodaysEvents();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-x-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900 overflow-x-hidden">
+      <Navbar/>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
-            Off-Stage Events
+          <h1 className="text-6xl font-extrabold text-transparent  bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-600 mb-4">
+          Off-Stage Events
           </h1>
         </motion.div>
 
@@ -188,7 +190,7 @@ const OffStageRegistration = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
-            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl will-change-transform"
+            className="backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 shadow-2xl will-change-transform"
           >
             <div className="bg-gradient-to-r from-pink-500 to-violet-500 p-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
@@ -224,7 +226,7 @@ const OffStageRegistration = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
-            className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 shadow-2xl will-change-transform"
+            className="backdrop-blur-lg  rounded-2xl overflow-hidden border border-white/20 shadow-2xl will-change-transform"
           >
             <div className="bg-gradient-to-r from-violet-500 to-pink-500 p-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">

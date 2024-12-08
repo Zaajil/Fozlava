@@ -8,6 +8,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import { useEventResults, useFilteredResults } from '../ui/useEventResults';
 import Footer from '../components/Footer';
 import '../index.css'
+import Navbar from "../components/Navbar";
 
 function EventResults() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,7 +64,9 @@ function EventResults() {
 
   return (
     <div>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-24 pb-12">
+      <Navbar/>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900 py-12">
+      
         <div className="absolute inset-0 opacity-10 bg-cover bg-center" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,7 +75,7 @@ function EventResults() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+            <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-600 mb-4">
               Event Results
             </h1>
             <p className="text-gray-400 text-xl">
